@@ -1,0 +1,36 @@
+//Κώδικας από το Chat GPT
+//Προς το παρόν δεν χρησιμοποιείται κάπου
+
+const express=require('express');
+const mysql=require('mysql');
+const cors=require('cors');
+
+const app=express();
+
+app.use(cors());
+
+const db=mysql.createConnection({
+
+    host: "localhost",
+    user:"root",
+    password:"",
+    database: "crud"  //στοιχεία από το XAMPP
+});
+
+app.post('/login',(req,res)=>{
+    const sql= "SELECT * FROM login WHERE username = ? and password = ?";
+    const values = [
+        req.body.email,
+        req.body.password
+    ]
+
+    db.query(sql,[values],(err,data)=>{
+
+        if(err) return res.json("Login Failed");
+        return res.json(data);
+    })
+});
+
+app.listen(8081,()=> {
+    console.log("Listening ...");
+})

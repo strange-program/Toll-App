@@ -1,0 +1,4 @@
+.nav-hover:hover {
+    color: #ff5733 !important; /* Αλλαγή χρώματος κατά το hover */
+    transition: color 0.3s ease-in-out;
+  }
