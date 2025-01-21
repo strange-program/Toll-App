@@ -25,7 +25,7 @@ function Home(){
           <div className="collapse navbar-collapse" id="navbarNav">
             <ul className="navbar-nav">
               <li className="nav-item">
-              <Link className="nav-link" to="/statistics"  style={navItemStyle} 
+              <Link className="nav-link" to="/tollmap"  style={navItemStyle} 
   onMouseEnter={(e) => e.target.style.color = navItemHoverStyle.color}
   onMouseLeave={(e) => e.target.style.color = navItemStyle.color}>Στατιστικά Διελεύσεων</Link>
               </li>

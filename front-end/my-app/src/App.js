@@ -7,6 +7,7 @@ import Statistics from './Statistics';
 import PaySuccess from './PaySuccess';
 import PaymentsFrequency from './PaymentsFrequency';
 import PayFailure from './PayFailure';
+import TollMap from './Map';
 
 
 
@@ -42,6 +43,10 @@ function App() {
 
    <Routes>
         <Route path="/payfailure" element={<PayFailure />} />
+   </Routes>
+
+   <Routes>
+        <Route path="/tollmap" element={<TollMap />} />
    </Routes>
 
 </Router>
