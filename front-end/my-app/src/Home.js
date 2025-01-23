@@ -1,9 +1,14 @@
 import React from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css';
+import "bootstrap/dist/js/bootstrap.bundle.min";
 import { Link } from "react-router-dom";
 import HomeImage from './home_image.jpg';
+import Footer from './Footer';
+
 
 function Home(){
+
+
     const navItemStyle = {
         color: "black",
         transition: "color 0.3s ease-in-out"
@@ -14,7 +19,7 @@ function Home(){
       };
     return (
         
-          <div className="container vh-100 text-center mt-4 bg-primary ">
+          <div >
           
 
 <nav className="navbar navbar-expand-lg navbar-light bg-light">
@@ -44,14 +49,38 @@ function Home(){
         </div>
       </nav>
 <br></br>
-      <img 
-            src={HomeImage}
-            alt="Welcome" 
-            className="img-fluid mb-3"
-          />
+    
+<div id="carouselExampleIndicators" class="carousel slide vh-100" data-ride="carousel">
+  <ol class="carousel-indicators">
+    <li data-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="first slide"></li>
+    <li data-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="second slide"></li>
+    <li data-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="third slide"></li>
+  </ol>
+  <div class="carousel-inner vh-100">
+    <div class="carousel-item active">
+      <img class="d-block w-100" src="/Road2.jpg" alt="First slide"/>
+    </div>
+    <div class="carousel-item">
+      <img class="d-block w-100" src="/Road1.jpg" alt="Second slide"/>
+    </div>
+    <div class="carousel-item">
+      <img class="d-block w-100" src={HomeImage} alt="Third slide"/>
+    </div>
+  </div>
+  <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="previous">
 
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Previous</span>
+    </button>
 
-          </div>
+  <button class="carousel-control-next"  type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Next</span>
+  </button>
+</div>
+
+<Footer/>
+</div>
       );
 
 }

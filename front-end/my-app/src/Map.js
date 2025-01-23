@@ -6,6 +6,7 @@ import tollStations from "./MapData";
 import L from "leaflet"; // Για custom icons
 import { Link } from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.min.css';
+import Footer from './Footer';
 
 
 // Δημιουργία προσαρμοσμένου εικονιδίου
@@ -27,7 +28,7 @@ const TollMap = () => {
   useEffect(() => {
     if (!selectedToll || !startDate || !endDate) return; 
 
-    axios.get(`http://localhost:5000/toll-passes`, {
+    axios.get(`http://localhost:5000/toll-passes`, {  //Χρειάζεται GET request
       params: {
         stationId: selectedToll.TollID,
         startDate: startDate,
@@ -52,26 +53,27 @@ const TollMap = () => {
 
 
   return (
-    <div className="container vh-100  mt-4 bg-primary ">
+    <div >
+
+  <h2>Φίλτρο Αναζήτησης</h2>
+
+ <br></br>
+
     
+  {/* Επιλογή ημερομηνιών */}
+ <div style={{ marginBottom: "10px" }}>
+  <label>Από: </label>
+  <input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
+
+  <label> Έως: </label>
+  <input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} />
+   </div>
+
     <h1 style={{ textAlign: "center" }} >Χάρτης Διοδίων και Διελεύσεων</h1>
     
-    <br></br>
-    <a>Επιλέξτε Χρονική Περίοδο</a>
-
-
     
-      {/* Επιλογή ημερομηνιών */}
-   <div style={{ marginBottom: "10px" }}>
-        <label>Από: </label>
-        <input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
 
-        <label> Έως: </label>
-        <input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} />
-    </div>
-
-
-      <MapContainer center={[40, 22]} zoom={10} style={{ height: "500px", width: "100%" }}>
+      <MapContainer center={[40, 22]} zoom={10} style={{ height: "600\px", width: "100%" }}>
         <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
         
           
@@ -112,10 +114,17 @@ const TollMap = () => {
           </Popup>
         )}
       </MapContainer>
-<br></br>
-      <div className="button-group">
-         <button><Link className="nav-link" to="/statistics">Διαγράμματα Στατιστικών</Link></button>
+      <br></br>
+      <br></br>
+      <br></br>
+      <div class="position-relative">
+         
+          <div class="position-absolute bottom-0 end-0">
+         <button type="button"  class="btn btn-success btn-lg"><Link className="nav-link" to="/statistics">Διαγράμματα Στατιστικών</Link></button>
+         </div>
+
         </div>
+        <Footer/>
         </div>
       )}
 

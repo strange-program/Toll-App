@@ -8,6 +8,8 @@ import PaySuccess from './PaySuccess';
 import PaymentsFrequency from './PaymentsFrequency';
 import PayFailure from './PayFailure';
 import TollMap from './Map';
+import Statistics2 from './Statistics2';
+
 
 
 
@@ -47,6 +49,10 @@ function App() {
 
    <Routes>
         <Route path="/tollmap" element={<TollMap />} />
+   </Routes>
+
+   <Routes>
+        <Route path="/statistics2" element={<Statistics2 />} />
    </Routes>
 
 </Router>

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Bar } from "react-chartjs-2";
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from "chart.js";
+import Footer from './Footer';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
@@ -63,9 +64,12 @@ function PaymentsFrequency(){
       }, []);
     
       return (
+        <div>
         <div className='container vh-100 text-center mt-4'>
-          <h2>Ιστόγραμμα</h2>
+          <h2>Συχνότητα Πληρωμών</h2>
           <Bar data={chartData} />
+        </div>
+        <Footer/>
         </div>
       );
 

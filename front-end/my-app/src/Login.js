@@ -7,6 +7,18 @@ function Login(){
 const [password,setPassword]=useState('');    
 const [email, setEmail]=useState('');
 
+const backgroundStyle = {
+   backgroundImage: "url('/Road2.jpg')",
+   backgroundSize: "cover",
+   backgroundPosition: "center",
+   backgroundRepeat: "no-repeat",
+   width: "100vw",
+   height: "100vh",
+   display: "flex",
+   justifyContent: "center",
+   alignItems: "center",
+ };
+
 function handleSubmit(event){
 
     event.preventDefault();
@@ -22,13 +34,15 @@ function handleSubmit(event){
    // .catch(err=>console.log(err));
 }
 return(
+   <div style={backgroundStyle}>
 
-<div className="d-flex vh-100 justify-content-center align-items-center bg-primary">
+      
 <div className='p-3 bg-white w-25'>
+<h1 style={{ textAlign: "center" ,color:"black"}}>Login</h1>
 <form onSubmit={handleSubmit}>
 
  <div className="mb-3">
-    <label htmlFor="email">Email</label>
+    <label style={{textAlign: "left",color:"black"}} htmlFor="email">Email</label>
 
     <input type="email" placeholder="Enter email" className='form-control'
     onChange={e => setEmail(e.target.value)}/>
