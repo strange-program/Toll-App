@@ -11,15 +11,32 @@ function PaymentsFrequency(){
         labels: [],
         datasets: [],
       });
+
     //Χρειάζεται GET request για να λάβει την συχνότητα των πληρωμών από την βάση
     //Ο κώδικας που έδωσε το chat είναι:
-      /*useEffect(() => {
-        fetch("https://api.example.com/data") // Αντικατάστησε με το δικό σου API endpoint
-          .then((response) => response.json())
-          .then((data) => {
+   //Το backend πρέπει να δώσει ένα json της μορφής 
+   /*[
+    { label: "A", value: 10 },
+    { label: "B", value: 20 },
+    { label: "C", value: 30 },
+    { label: "D", value: 40 },
+    { label: "E", value: 50 }
+  ];*/
+
+      useEffect(() => {
+        fetch("http://localhost:9115/api/paymentsfrequency", {
+      method: "GET",
+      headers: { "Content-Type": "application/json" ,"X-OBSERVATORY-AUTH":localStorage.getItem("jwt")},
+  }).then(response => {
+    console.log(response.status);
+      if (!response.ok) {
+          return response.json().then(err => { throw new Error(err.message); }); // Αν status ≠ 200, πετάμε error με το μήνυμα του server
+      }
+      return response.json(); // Αν status = 200, συνεχίζουμε κανονικά
+  }).then((data) => {
             const labels = data.map((item) => item.label);
             const values = data.map((item) => item.value);
-    
+    console.log(labels);
             setChartData({
               labels: labels,
               datasets: [
@@ -34,8 +51,8 @@ function PaymentsFrequency(){
             });
           })
           .catch((error) => console.error("Error fetching data:", error));
-      }, []);*/
-
+      }, []);
+/*
       useEffect(() => {
         // Dummy data για δοκιμή
         const dummyData = [
@@ -61,12 +78,12 @@ function PaymentsFrequency(){
             },
           ],
         });
-      }, []);
+      }, []);*/
     
       return (
         <div>
         <div className='container vh-100 text-center mt-4'>
-          <h2>Συχνότητα Πληρωμών</h2>
+          <h2>Συχνότητα Πληρωμών από Λειτουργούς Διοδίων</h2>
           <Bar data={chartData} />
         </div>
         <Footer/>

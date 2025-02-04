@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route,Navigate } from 'react-router-dom';
 import Login from './Login';
 import Home from './Home';
 import Cost from './Costs';
@@ -9,6 +9,7 @@ import PaymentsFrequency from './PaymentsFrequency';
 import PayFailure from './PayFailure';
 import TollMap from './Map';
 import Statistics2 from './Statistics2';
+import ProtectedRoute from './ProtectedRoute';
 
 
 
@@ -18,43 +19,32 @@ function App() {
 
 <Router>
     <Routes>
-        <Route path="/" element={<Login />} />
-   </Routes>
-
-   <Routes>
+        
+  <Route path="/" element={<Login />} />
+   
+   <Route element={<ProtectedRoute />}>
+   
         <Route path="/homepage" element={<Home />} />
-   </Routes>
-   <Routes>
+   
         <Route path="/frequency" element={<PaymentsFrequency />} />
-   </Routes>
-   <Routes>
+  
         <Route path="/payments" element={<Cost />} />
-   </Routes>
-
-   <Routes>
+  
         <Route path="/statistics" element={<Statistics />} />
-   </Routes>
-
-   <Routes>
+  
         <Route path="/logout" element={<Logout />} />
-   </Routes>
 
-   <Routes>
         <Route path="/paysuccess" element={<PaySuccess />} />
-   </Routes>
 
-   <Routes>
-        <Route path="/payfailure" element={<PayFailure />} />
-   </Routes>
-
-   <Routes>
+          <Route path="/payfailure" element={<PayFailure />} />
+ 
         <Route path="/tollmap" element={<TollMap />} />
-   </Routes>
-
-   <Routes>
+   
         <Route path="/statistics2" element={<Statistics2 />} />
-   </Routes>
+</Route>
 
+<Route path="*" element={<Navigate to="/" />} />
+</Routes>
 </Router>
   );
 }

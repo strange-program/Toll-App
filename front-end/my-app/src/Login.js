@@ -1,11 +1,12 @@
 import React , { useEffect, useState } from 'react'
-import axios from 'axios'
 import 'bootstrap/dist/css/bootstrap.min.css';
+
 
 
 function Login(){
 const [password,setPassword]=useState('');    
-const [email, setEmail]=useState('');
+const [username, setUsername]=useState('');
+
 
 const backgroundStyle = {
    backgroundImage: "url('/Road2.jpg')",
@@ -23,15 +24,47 @@ function handleSubmit(event){
 
     event.preventDefault();
  
+    //Στον backend server να ληφθεί υπόψη το  "application/x-www-form-urlencoded"
+
     //Χρειάζεται ένα POST request με το email και το password του χρήστη
     //Σε περίπτωση επιτυχίας θα επιστρέφει ένα json με το token του χρήστη και θα συνεχίζει στην σελίδα 
     //homepage
     //Σε περίπτωση σφάλματος ανακατευθύνει πάλι στην ίδια σελίδα /.
 
-    //Αυτός είναι ο κώδικας από το
-  //axios.post('http://localhost:8081/login', {email, password})
-    //.then(res=>console.log(res))
-   // .catch(err=>console.log(err));
+
+     // Έλεγχος αν τα πεδία είναι κενά
+     if (!username || !password) {
+      alert("Εισάγετε username και password");
+      return;
+  }
+  const formData = new URLSearchParams();
+        formData.append("username", username);
+        formData.append("password", password);
+  
+
+   fetch("http://localhost:9115/api/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: formData// Μετατροπή σε x-www-form-urlencoded
+  })
+  .then(response => {
+    console.log(response.status);
+      if (!response.ok) {
+          return response.json().then(err => { throw new Error(err.message); }); // Αν status ≠ 200, πετάμε error με το μήνυμα του server
+      }
+      return response.json(); // Αν status = 200, συνεχίζουμε κανονικά
+  })
+  .then(data => {
+      localStorage.setItem("jwt", data.token); // Αποθήκευση JWT
+      console.log("JWT Token:", data.token);
+      window.location.href = "/homepage"; // Ανακατεύθυνση στο /Home
+  })
+  .catch(error => {
+      alert(error.message); // Εμφάνιση μηνύματος λάθους από τον server
+      window.location.href = "/"; // Μένουμε στην ίδια σελίδα
+  });
+  
+ 
 }
 return(
    <div style={backgroundStyle}>
@@ -42,15 +75,15 @@ return(
 <form onSubmit={handleSubmit}>
 
  <div className="mb-3">
-    <label style={{textAlign: "left",color:"black"}} htmlFor="email">Email</label>
+    <label style={{textAlign: "left",color:"black"}} htmlFor="email">Username</label>
 
-    <input type="email" placeholder="Enter email" className='form-control'
-    onChange={e => setEmail(e.target.value)}/>
+    <input type="username" placeholder="Enter username" className='form-control'
+    onChange={e => setUsername(e.target.value)}/>
  </div>
  <div className="mb-3">
     <label htmlFor="password">Password</label>
   
-    <input type="password" placeholder="Enter password"className='form-control'
+    <input type="password" placeholder="Enter password"className='form-control'  
     onChange={e => setPassword(e.target.value)}/>
  </div>
 

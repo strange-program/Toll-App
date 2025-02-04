@@ -17,17 +17,41 @@ import { Link } from "react-router-dom";
     textAlign:"center",
   };
 
+ function HandleClick(){
 
+
+  fetch("http://localhost:9115/api/logout", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" ,"X-OBSERVATORY-AUTH":localStorage.getItem("jwt")},
+    //empty body
+})
+.then(response => {
+  console.log(response.status);
+    if (!response.ok) {
+        return response.json().then(err => { throw new Error(err.message); }); // Αν status ≠ 200, πετάμε error με το μήνυμα του server
+    }
+    return response.json(); // Αν status = 200, συνεχίζουμε κανονικά
+})
+.then(data => {
+    alert("Επιτυχής Αποσύνδεση");
+    window.location.href = "/"; // Ανακατεύθυνση στο Login
+})
+.catch(error => {
+    alert(error.message); // Εμφάνιση μηνύματος λάθους από τον server
+    window.location.href = "/logout"; // Μένουμε στην ίδια σελίδα
+});
+
+
+ }
 
 //Χρειάζεται POST request
 
   return(<div style={backgroundStyle}>
 <div className='p-3 bg-white w-25 center'> 
-  <h2>Logout</h2>
+  
+<h5>Θέλετε να αποσυνδεθείτε;</h5>
 
-  <h5>Έχετε αποσυνδεδεθεί επιτυχώς</h5>
-
-  <button type="button" class="btn btn-primary btn-lg"><Link className="nav-link" to="/">Οκ</Link></button>
+  <button type="button" class="btn btn-primary btn-lg" onClick={HandleClick}><Link className="nav-link" to="/">Logout</Link></button>
 
   </div>
 
