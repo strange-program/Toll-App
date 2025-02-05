@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Highcharts from "highcharts";
+import { Link } from "react-router-dom";
 import HighchartsReact from "highcharts-react-official";
 import Footer from './Footer';
 
@@ -15,19 +16,55 @@ const Statistics2 = () => {
 
   useEffect(() => {
     if (startDate && endDate) {
-      fetchData();
+
+      let start=new Date(startDate);
+      let end=new Date(endDate);
+  
+     if(start>end) alert("Εισάγετε έγκυρο χρονικό διάστημα");
+     else{
+     fetchData(start,end);}
     }
   }, [startDate, endDate]);
 
-  const fetchData = () => {  //Χρειάζεται GET request
-    if(startDate>endDate)alert("Εισάγετε έγκυρο χρονικό διάστημα");
-    else{
-    const data = generateMockData(startDate, endDate);
-    setChartData(data);
-    setPieData(generatePieData(data));
-}
-  };
 
+/*  Το backend δέχεται get request με παραμέτρους startDate και endDate. Επιστρέφει τον αριθμό των διελεύσεων και των 8 λειρτουργών με το 
+ εξής format:
+  [ { name: "aegean", y: 45},
+    { name: "olympia", y: 30},
+    { name: "neaodos", y: 60},])
+
+*/ 
+
+
+  const fetchData = (start,end) => {  
+   fetch('http://localhost:9115/api/getDiagram2',{
+      method: "GET",
+      headers: { "Content-Type": "application/json" ,"X-OBSERVATORY-AUTH":localStorage.getItem("jwt")},
+      params: {
+        startDate: start,
+        endDate: end
+      }
+  })
+        .then(response => {
+        console.log(response.status);
+         if (!response.ok) {
+          return response.json().then(err => { throw new Error(err.message); }); // Αν status ≠ 200, πετάμε error με το μήνυμα του server
+         }
+       return response.json(); // Αν status = 200, συνεχίζουμε κανονικά
+       })
+        .then((data)=>{
+          
+          setChartData(data);
+          setPieData(generatePieData(data));//πίτα με το ποσοστό των διελεύσεων ανά εταιρεία
+          }
+           
+        )
+        .catch(error => {console.error('Error fetching passes:', error);
+                            alert("Σφάλμα στην φόρτωση της σελίδας Στατιστικών");
+                            window.location.href='/homepage';})
+
+  };
+/*
   const generateMockData = (start, end) => {
     let data = companies.map(company => {
       return {
@@ -37,7 +74,7 @@ const Statistics2 = () => {
     });
     return data;
   };
-
+*/
   const generatePieData = (data) => {
     const total = data.reduce((sum, company) => sum + company.y, 0);
     return data.map(company => ({
@@ -89,7 +126,16 @@ const Statistics2 = () => {
       <input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} />
       <HighchartsReact highcharts={Highcharts} options={chartOptions} />
       <HighchartsReact highcharts={Highcharts} options={pieChartOptions} />
+      
+        
+      <div className="position-relative">
+
+      <div className="position-absolute bottom-0 end-0">
+       <button type="button" class="btn btn-success btn-lg"><Link className="nav-link" to="/homepage">Επιστροφή στην Αρχική</Link></button>
+      </div>
       <Footer/>
+
+       </div>
     </div>
   );
 };

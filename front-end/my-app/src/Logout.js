@@ -33,6 +33,7 @@ import { Link } from "react-router-dom";
     return response.json(); // Αν status = 200, συνεχίζουμε κανονικά
 })
 .then(data => {
+   localStorage.removeItem("jwt", localStorage.getItem("jwt")); // Αποθήκευση JWT
     alert("Επιτυχής Αποσύνδεση");
     window.location.href = "/"; // Ανακατεύθυνση στο Login
 })

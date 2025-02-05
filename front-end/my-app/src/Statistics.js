@@ -40,17 +40,60 @@ const Statistics = () => {
     
     ];
 
+
+   
+
   useEffect(() => {           //καλείται όταν αλλάζει κάποιο από τα [startDate, endDate, selectedCompany]
     if (startDate && endDate) {
-      fetchData();
+
+       let start=new Date(startDate);
+       let end=new Date(endDate);
+   
+      if(start>end) alert("Εισάγετε έγκυρο χρονικό διάστημα");
+      else{
+      fetchData(start,end);}
     }
   }, [startDate, endDate, selectedCompany]);
 
-  const fetchData = () => {                     //Χρειάζεται GET request
+  const fetchData = (start,end) => {                     
     // Mock data fetching - Replace this with an actual API call
-    const data = generateMockData(startDate, endDate, selectedCompany);
-    setChartData(data);
-    setPieData(generatePieData(data)); //πίτα με το ποσοστό των οχημάτων κάθε τιμής για αυτές τις διελεύσεις
+    //const data = generateMockData(startDate, endDate, selectedCompany);
+  
+
+/* Το backend δέχεται get request με παραμέτρους startDate, endDate και operator και απαντά με το παρακάτω format:
+   [{ date: "2024-01-01", value: 45 ,Price1:2, Price2:3, Price3:9 , Price4:10},
+    { date: "2024-01-02", value: 30 ,Price1:2, Price2:3, Price3:9 , Price4:10},
+    { date: "2024-01-03", value: 60 ,Price1:2, Price2:3, Price3:9 , Price4:10},]
+    
+*/
+  
+    fetch('http://localhost:9115/api/getDiagram1',{
+      method: "GET",
+      headers: { "Content-Type": "application/json" ,"X-OBSERVATORY-AUTH":localStorage.getItem("jwt")},
+      params: {
+        operator: selectedCompany,
+        startDate: start,
+        endDate: end
+      }
+  })
+        .then(response => {
+        console.log(response.status);
+         if (!response.ok) {
+          return response.json().then(err => { throw new Error(err.message); }); // Αν status ≠ 200, πετάμε error με το μήνυμα του server
+         }
+       return response.json(); // Αν status = 200, συνεχίζουμε κανονικά
+       })
+        .then((data)=>{
+          
+          setChartData(data);
+          setPieData(generatePieData(data));//πίτα με το ποσοστό των οχημάτων κάθε τιμής για αυτές τις διελεύσεις
+          }
+           
+        )
+        .catch(error => {console.error('Error fetching passes:', error);
+                            alert("Σφάλμα στην φόρτωση της σελίδας Στατιστικών");
+                            window.location.href='/homepage';})
+ 
   };
 //Η generateMockData δημιουργεί τυχαία δεδομένα με το εξής format
 //[
@@ -59,6 +102,8 @@ const Statistics = () => {
     //{ date: "2024-01-03", value: 60 ,Price1:2, Price2:3, Price3:9 , Price4:10},
     
   //]
+
+  /*
   const generateMockData = (start, end, company) => {
     let data = [
       ];
@@ -93,7 +138,7 @@ const Statistics = () => {
     return data;
   };
 
-  
+  */
   const generatePieData = (data) => {
     const dsize=data.length;
     let tot =0;

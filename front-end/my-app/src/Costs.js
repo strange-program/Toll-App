@@ -3,42 +3,82 @@ import Footer from './Footer'
 
 function Cost (){
 
-        const [amountDue, setAmountDue] = useState([]);
-        const [message, setMessage] = useState('');
+      const [amountDue, setAmountDue] = useState([]);
+      
 
-    /* Χρειάζεται GET request για να λάβουμε πόσο οφείλει ο καθένας στον χρήστη
-     Επίσης χρειάζεται POST request όταν πατηθεί κάποιο PAY putton. 
-     Σε περίπτωση επιτυχίας πρέπει να ανακατευθύνει στην σελίδα /paysuccess
-     Σε περίπτωση σφάλματος στην σελίδα /payfailure   
-      O κώδικας που έδωσε το Chat GPT*/
+
+
+      /*Το backend πρέπει να απαντάει στο get ["label":operator,value:"3"] και οι operators
+      
+      να είναι σε αλφαβητικοή σειρά ώστε να τοποθετηθούν  με τη σωστή σειρά οι τιμές στην φόρμα.
+      
+      Αν ο λειτουργός-χρήστες οφείλει χρήματα, η τιμή εμφανίζεται αρνητική, αλλιώς θετική. Στον ευαυρό του είναι πάντα 0.
+      */
+
+      /* Στο post request το backend δέχεται 2 ορίσματα, τον operator και το amount. Αν ο χρήστης θέλει να εξοφλήσει τα πάντα, τότε
+      
+    ο operator έχει την τιμή all.
+    
+     Το amount ίσως να μην χρειάζεται γιατί το ποσό είναι συγκεκριμένο και ήδη γνωστό.
+    */
+
         useEffect(() => {
             // Mock API call to fetch due amounts
-            fetch('/api/getAmountsDue')
+            fetch('http://localhost:9115/api/getAmountsDue',{
+              method: "GET",
+              headers: { "Content-Type": "application/json" ,"X-OBSERVATORY-AUTH":localStorage.getItem("jwt")},
+              //empty body
+          })
                 .then(response => response.json())
-                .then(data => setAmountDue(data.amounts))
-                .catch(error => console.error('Error fetching due amounts:', error));
+                .then((data)=>{
+                  const labels = data.map((item) => item.label);
+                   setAmountDue(data.map((item) => item.value));
+                  }
+                   
+                )
+                .catch(error => {console.error('Error fetching due amounts:', error);
+                                    alert("Σφάλμα στην φόρτωση της σελίδας Πληρωμών");
+                                    window.location.href='/homepage';}
+              
+              );
         }, []);
-    
-        const handleSubmit = async (e,operator,amount) => {
-            e.preventDefault();
-    
-            try {
-                const response = await fetch('/api/payDebt', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ company:operator, money: amount })
-                });
-                const data = await response.json();
-                setMessage(data.message || 'Η πληρωμή πραγματοποιήθηκε επιτυχώς!');
-            } catch (error) {
-                setMessage('Σφάλμα κατά την επεξεργασία της πληρωμής.');
-            }
-        };
-        let total=amountDue[0]+amountDue[1]+amountDue[2]+amountDue[3]+amountDue[4]+amountDue[5]+amountDue[6]+amountDue[7];
+
+
+        const handleSubmit = async (e, operator, amount) => {
+          e.preventDefault();
+          
+          try {
+              const response = await fetch('http://localhost:9115/api/postPayment', {
+                  method: 'POST',
+                  headers: { 
+                      'Content-Type': 'application/json',
+                      "X-OBSERVATORY-AUTH": localStorage.getItem("jwt") 
+                  },
+                  body: JSON.stringify({ company: operator, money: amount })
+              });
+      
+              if (response.ok) {
+                
+                window.location.href='/paysuccess'; 
+                
+              } else {
+                window.location.href='/payfail'; 
+              }
+          } catch (error) {
+            window.location.href='/payfail'; 
+          }
+      };
+      
+      
+        let total=0;
+
+        for(let i=0; i<8; i++)
+        {  if(Number(amountDue[i])<0)  total=total+Number(amountDue[i]);}
+     
 return (
 <div>
     <h1 style={{ textAlign: "center" }}>Διαχείριση Οφειλών</h1>
-    <form class="row g-3">
+    <div class="row g-3">
 
     <div class="col-md-4">
     <h3>Εταιρεία</h3>
@@ -53,146 +93,146 @@ return (
   </div>
 
 <div class="col-md-4">
-<td>aegeanmotorway</td>
+<div>aegeanmotorway</div>
  </div>
 
   <div class="col-md-4">
-<td>{amountDue[0]}€</td>
+<div>{amountDue[0]}€</div>
  </div> 
 
  <div class="col-md-4">
     
     <form onSubmit={(event) => handleSubmit(event, 'aegeanmotorway',amountDue[0])}>    
-    <button type="submit" class="btn btn-outline-primary" disabled={amountDue[0] === 0} >Pay</button>
+    <button type="submit" className="btn btn-outline-primary" disabled={Number(amountDue[0]) >= 0 || amountDue.length === 0} >Pay</button>
     </form>
 </div>
 
 
 <div class="col-md-4">
-<td>egnatia</td>
+<div>egnatia</div>
  </div>
 
   <div class="col-md-4">
-<td>{amountDue[1]}€</td>
+<div>{amountDue[1]}€</div>
  </div> 
 
  <div class="col-md-4">
     
     <form onSubmit={(event) => handleSubmit(event, 'egnatia',amountDue[1])}>    
-    <button type="submit" class="btn btn-outline-primary"  disabled={amountDue[1] === 0} >Pay</button>
+    <button type="submit" className="btn btn-outline-primary"  disabled={Number(amountDue[1]) >= 0 || amountDue.length === 0} >Pay</button>
     </form>
 </div>
 
 
 <div class="col-md-4">
-<td>gefyra</td>
+<div>gefyra</div>
  </div>
 
   <div class="col-md-4">
-<td>{amountDue[2]}€</td>
+<div>{amountDue[2]}€</div>
  </div> 
 
  <div class="col-md-4">
     
     <form onSubmit={(event) => handleSubmit(event, 'gefyra',amountDue[2])}>    
-    <button type="submit" class="btn btn-outline-primary"  disabled={amountDue[2] === 0} >Pay</button>
+    <button type="submit" className="btn btn-outline-primary"  disabled={Number(amountDue[2]) >= 0 || amountDue.length === 0} >Pay</button>
     </form>
 </div>
 
 
 <div class="col-md-4">
-<td>kentrikiodos</td>
+<div>kentrikiodos</div>
  </div>
 
   <div class="col-md-4">
-<td>{amountDue[3]}€</td>
+<div>{amountDue[3]}€</div>
  </div> 
 
  <div class="col-md-4">
     
     <form onSubmit={(event) => handleSubmit(event, 'kentrikiodos',amountDue[3])}>    
-    <button type="submit"class="btn btn-outline-primary"  disabled={amountDue[3] === 0} >Pay</button>
+    <button type="submit"className="btn btn-outline-primary"  disabled={Number(amountDue[3]) >= 0 || amountDue.length === 0} >Pay</button>
     </form>
 </div>
 
 <div class="col-md-4">
-<td>moreas</td>
+<div>moreas</div>
  </div>
 
   <div class="col-md-4">
-<td>{amountDue[4]}€</td>
+<div>{amountDue[4]}€</div>
  </div> 
 
  <div class="col-md-4">
     
     <form onSubmit={(event) => handleSubmit(event, 'moreas',amountDue[4])}>    
-    <button type="submit" class="btn btn-outline-primary"  disabled={amountDue[4] === 0} >Pay</button>
+    <button type="submit" className="btn btn-outline-primary"  disabled={Number(amountDue[4]) >= 0 || amountDue.length === 0} >Pay</button>
     </form>
 </div>
 
 <div class="col-md-4">
-<td>naodos</td>
+<div>naodos</div>
  </div>
 
   <div class="col-md-4">
-<td>{amountDue[4]}€</td>
+<div>{amountDue[4]}€</div>
  </div> 
 
  <div class="col-md-4">
     
     <form onSubmit={(event) => handleSubmit(event, 'naodos',amountDue[5])}>    
-    <button type="submit" class="btn btn-outline-primary"  disabled={amountDue[5] === 0} >Pay</button>
+    <button type="submit" className="btn btn-outline-primary"  disabled={Number(amountDue[5]) >= 0 || amountDue.length === 0} >Pay</button>
     </form>
 </div>
 <div class="col-md-4">
-<td>neaodos</td>
+<div>neaodos</div>
  </div>
 
   <div class="col-md-4">
-<td>{amountDue[6]}€</td>
+<div>{amountDue[6]}€</div>
  </div> 
 
  <div class="col-md-4">
     
     <form onSubmit={(event) => handleSubmit(event, 'neaodos',amountDue[6])}>    
-    <button type="submit" class="btn btn-outline-primary"  disabled={amountDue[6] === 0} >Pay</button>
+    <button type="submit" className="btn btn-outline-primary"  disabled={Number(amountDue[6]) >= 0 || amountDue.length === 0} >Pay</button>
     </form>
 </div>
 
 
 
 <div class="col-md-4">
-<td>olympiaodos</td>
+<div>olympiaodos</div>
  </div>
 
   <div class="col-md-4">
-<td>{amountDue[7]}€</td>
+<div>{amountDue[7]}€</div>
  </div> 
 
  <div class="col-md-4">
     
     <form onSubmit={(event) => handleSubmit(event, 'olympiaodos',amountDue[7])}>    
-    <button type="submit" class="btn btn-outline-primary"  disabled={amountDue[7] === 0} >Pay</button>
+    <button type="submit" className="btn btn-outline-primary"  disabled={ amountDue.length === 0 || Number(amountDue[7]) >= 0} >Pay</button>
     </form>
 </div>
 
 
 <div class="col-md-4">
-<td>Σύνολο</td>
+<div>Σύνολο</div>
  </div>
 
   <div class="col-md-4">
-<td>{total}€</td>
+<div>{total}€</div>
  </div> 
 
  <div class="col-md-4">
     
     <form onSubmit={(event) => handleSubmit(event, 'all',total)}>    
-    <button type="submit"class="btn btn-outline-primary"  disabled={total === 0} >Pay All</button>
+    <button type="submit"className="btn btn-outline-primary"  disabled={ amountDue.length === 0|| total === 0} >Pay All</button>
     </form>
 </div>
 
-</form>
+</div>
 <Footer/>
 </div>
 
