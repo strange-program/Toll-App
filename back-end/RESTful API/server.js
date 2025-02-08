@@ -10,15 +10,15 @@ app.use(express.json());
 
 // MongoDB connection string (replace with your connection string)
 const mongoURI = 'mongodb://localhost:27017/TollDatabase'; // For local MongoDB
-// For MongoDB Atlas, use your MongoDB Atlas URI here
 
 // Connect to MongoDB
 mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
 .then(() => {
-    console.log('Connected to MongoDB');
+    console.log('Connected to MongoDB🔗');
 })
 .catch((err) => {
     console.log('Error connecting to MongoDB:', err);
+    process.exit(1);  // Exit the application in case of MongoDB connection failure
 });
 
 // Define a Schema for the Passes collection based on your data
@@ -33,7 +33,7 @@ const passSchema = new mongoose.Schema({
 // Create a model based on the schema and specify the collection name
 const Pass = mongoose.model('Pass', passSchema, 'Passes');
 
-// **NEW** Schema for TollStations (from your `Tolls` folder)
+// **NEW** Schema for TollStations
 const tollStationSchema = new mongoose.Schema({
     OpID: { type: String, required: true },
     Operator: { type: String, required: true },
@@ -51,18 +51,21 @@ const tollStationSchema = new mongoose.Schema({
     Price4: { type: Number, required: true },
 });
 
-// Create a model for the toll stations collection
 const TollStation = mongoose.model('TollStation', tollStationSchema, 'Tolls');
 
 // API endpoint to get all TollStations
 app.get('/api/tollStations', async (req, res) => {
     try {
-        const tollStations = await TollStation.find(); // Fetch all toll stations from the database
-        console.log('Fetched toll stations:', tollStations); // Log the result to console
-        res.json(tollStations);
+        const tollStations = await TollStation.find();
+        if (tollStations.length === 0) {
+            console.log('No toll stations found');
+            return res.status(204).send(); // No content
+        }
+        console.log('Toll stations fetched successfully');
+        res.status(200).json(tollStations); // OK
     } catch (error) {
         console.error('Error fetching toll stations:', error);
-        res.status(500).json({ message: 'Error fetching toll stations' });
+        res.status(500).json({ message: 'Internal server error' }); // Server error
     }
 });
 
@@ -71,48 +74,186 @@ app.post('/api/tollStations', async (req, res) => {
     try {
         const { OpID, Operator, TollID, Name, PM, Locality, Road, Lat, Long, Email, Price1, Price2, Price3, Price4 } = req.body;
 
-        // Create a new toll station document
-        const newTollStation = new TollStation({
-            OpID,
-            Operator,
-            TollID,
-            Name,
-            PM,
-            Locality,
-            Road,
-            Lat,
-            Long,
-            Email,
-            Price1,
-            Price2,
-            Price3,
-            Price4,
-        });
+        if (!OpID || !Operator || !TollID || !Name || !PM || !Locality || !Road || !Lat || !Long || !Email || !Price1 || !Price2 || !Price3 || !Price4) {
+            console.log('Bad request: Missing required fields');
+            return res.status(400).json({ message: 'Bad request: Missing required fields' }); // Bad request
+        }
 
-        // Save the document to the database
+        const newTollStation = new TollStation(req.body);
         await newTollStation.save();
-
-        res.status(201).json({ message: 'Toll station added successfully', tollStation: newTollStation });
+        console.log('Toll station added successfully');
+        res.status(201).json({ message: 'Toll station added successfully', tollStation: newTollStation }); // Created
     } catch (error) {
         console.error('Error adding toll station:', error);
-        res.status(500).json({ message: 'Error adding toll station' });
+        res.status(500).json({ message: 'Internal server error' }); // Server error
     }
 });
 
 // API endpoint to get all Passes
 app.get('/api/tollStationPasses', async (req, res) => {
     try {
-        const passes = await Pass.find(); // Fetch all passes from the database
-        console.log('Fetched passes:', passes); // Log the result to console
-        res.json(passes);
+        const passes = await Pass.find();
+        if (passes.length === 0) {
+            console.log('No passes found');
+            return res.status(204).send(); // No content
+        }
+        console.log('Passes fetched successfully');
+        res.status(200).json(passes); // OK
     } catch (error) {
         console.error('Error fetching passes:', error);
-        res.status(500).json({ message: 'Error fetching passes' });
+        res.status(500).json({ message: 'Internal server error' }); // Server error
     }
 });
 
-// Set up a port for the API to listen on (port 9115 as requested)
+// API endpoint to get passes for a specific toll station
+app.get('/api/tollStationPasses/:tollStationID', async (req, res) => {
+    try {
+        const { tollStationID } = req.params;
+
+        const passes = await Pass.find({ tollID: tollStationID }).sort({ timestamp: 1 });
+        if (passes.length === 0) {
+            console.log(`No passes found for toll station ID: ${tollStationID}`);
+            return res.status(204).send(); // No content
+        }
+
+        console.log(`Passes fetched for toll station ID: ${tollStationID}`);
+        res.status(200).json(passes); // OK
+    } catch (error) {
+        console.error('Error fetching passes:', error);
+        res.status(500).json({ message: 'Internal server error' }); // Server error
+    }
+});
+
+// API endpoint to get passes for a specific toll station with a date filter (from date)
+app.get('/api/tollStationPasses/:tollStationID/:date_from', async (req, res) => {
+    try {
+        const { tollStationID, date_from } = req.params;
+
+        // Validate date_from format (expecting yyyymmdd)
+        if (!/^\d{8}$/.test(date_from)) {
+            console.log('Invalid date format');
+            return res.status(400).json({ message: 'Invalid date format. Please use yyyymmdd (e.g., 20250208)' }); // Bad request
+        }
+
+        const startDateNumeric = parseInt(date_from, 10);
+        console.log(`Fetching passes for TollStationID: ${tollStationID}, Date from: ${startDateNumeric}`);
+
+        const passes = await Pass.find({ tollID: tollStationID });
+
+        // Convert all stored timestamps into yyyymmdd format
+        const filteredPasses = passes
+        .map(pass => {
+            let formattedTimestamp;
+
+            if (typeof pass.timestamp === 'string' && /^\d{8}$/.test(pass.timestamp)) {
+                // Already in yyyymmdd format as a string
+                formattedTimestamp = parseInt(pass.timestamp, 10);
+            } else if (pass.timestamp instanceof Date) {
+                // Convert Date object to yyyymmdd
+                const year = pass.timestamp.getUTCFullYear();
+                const month = String(pass.timestamp.getUTCMonth() + 1).padStart(2, '0'); // Ensure 2-digit month
+                const day = String(pass.timestamp.getUTCDate()).padStart(2, '0'); // Ensure 2-digit day
+                formattedTimestamp = parseInt(`${year}${month}${day}`, 10);
+            } else {
+                // Skip invalid timestamps
+                return null;
+            }
+
+            // Just return the pass data without adding the formattedTimestamp
+            return pass.toObject(); // Return only the pass data, without `formattedTimestamp`
+        })
+        .filter(pass => {
+            const year = pass.timestamp.getUTCFullYear();
+            const month = String(pass.timestamp.getUTCMonth() + 1).padStart(2, '0');
+            const day = String(pass.timestamp.getUTCDate()).padStart(2, '0');
+            const formattedTimestamp = parseInt(`${year}${month}${day}`, 10);
+            return formattedTimestamp >= startDateNumeric;
+        })
+        .sort((a, b) => a.timestamp - b.timestamp); // Sort by timestamp
+
+        if (filteredPasses.length === 0) {
+            console.log('No passes found after date filter');
+            return res.status(204).send(); // No content
+        }
+
+        console.log(`Filtered passes fetched for toll station ID: ${tollStationID}`);
+        res.status(200).json(filteredPasses); // OK
+    } catch (error) {
+        console.error('Error fetching passes:', error);
+        res.status(500).json({ message: 'Internal server error' }); // Server error
+    }
+});
+
+// API endpoint to get passes for a specific toll station with a date filter (from date to date)
+app.get('/api/tollStationPasses/:tollStationID/:date_from/:date_to', async (req, res) => {
+    try {
+        const { tollStationID, date_from, date_to } = req.params;
+
+        // Validate date_from and date_to format (expecting yyyymmdd)
+        if (!/^\d{8}$/.test(date_from) || !/^\d{8}$/.test(date_to)) {
+            console.log('Invalid date format');
+            return res.status(400).json({ message: 'Invalid date format. Please use yyyymmdd (e.g., 20250208)' }); // Bad request
+        }
+
+        const startDateNumeric = parseInt(date_from, 10);
+        const endDateNumeric = parseInt(date_to, 10);
+
+        // Check if startDate is greater than endDate
+        if (startDateNumeric > endDateNumeric) {
+            console.log('Invalid date range: start date cannot be later than end date');
+            return res.status(400).json({ message: 'Invalid date range: start date cannot be later than end date' }); // Bad request
+        }
+
+        console.log(`Fetching passes for TollStationID: ${tollStationID}, Date range: ${startDateNumeric} to ${endDateNumeric}`);
+
+        const passes = await Pass.find({ tollID: tollStationID });
+
+        // Convert all stored timestamps into yyyymmdd format and filter within date range
+        const filteredPasses = passes
+        .map(pass => {
+            let formattedTimestamp;
+
+            if (typeof pass.timestamp === 'string' && /^\d{8}$/.test(pass.timestamp)) {
+                // Already in yyyymmdd format as a string
+                formattedTimestamp = parseInt(pass.timestamp, 10);
+            } else if (pass.timestamp instanceof Date) {
+                // Convert Date object to yyyymmdd
+                const year = pass.timestamp.getUTCFullYear();
+                const month = String(pass.timestamp.getUTCMonth() + 1).padStart(2, '0'); // Ensure 2-digit month
+                const day = String(pass.timestamp.getUTCDate()).padStart(2, '0'); // Ensure 2-digit day
+                formattedTimestamp = parseInt(`${year}${month}${day}`, 10);
+            } else {
+                // Skip invalid timestamps
+                return null;
+            }
+
+            // Just return the pass data without adding the formattedTimestamp
+            return pass.toObject(); // Return only the pass data, without `formattedTimestamp`
+        })
+        .filter(pass => {
+            const year = pass.timestamp.getUTCFullYear();
+            const month = String(pass.timestamp.getUTCMonth() + 1).padStart(2, '0');
+            const day = String(pass.timestamp.getUTCDate()).padStart(2, '0');
+            const formattedTimestamp = parseInt(`${year}${month}${day}`, 10);
+            return formattedTimestamp >= startDateNumeric && formattedTimestamp <= endDateNumeric;
+        })
+        .sort((a, b) => a.timestamp - b.timestamp); // Sort by timestamp
+
+        if (filteredPasses.length === 0) {
+            console.log('No passes found after date filter');
+            return res.status(204).send(); // No content
+        }
+
+        console.log(`Filtered passes fetched for toll station ID: ${tollStationID}`);
+        res.status(200).json(filteredPasses); // OK
+    } catch (error) {
+        console.error('Error fetching passes:', error);
+        res.status(500).json({ message: 'Internal server error' }); // Server error
+    }
+});
+
+// Set up a port for the API to listen on
 const port = 9115;
 app.listen(port, () => {
-    console.log(`Server is running on http://localhost:${port}`);
+    console.log(`Server is running on http://localhost:${port}🚀`);
 });
