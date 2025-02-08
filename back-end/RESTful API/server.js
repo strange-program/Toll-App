@@ -1,6 +1,8 @@
 // Import required dependencies
 const express = require('express');
 const mongoose = require('mongoose');
+const csv = require('csv-parser');
+const fs = require('fs');
 
 // Initialize Express app
 const app = express();
@@ -52,6 +54,40 @@ const tollStationSchema = new mongoose.Schema({
 });
 
 const TollStation = mongoose.model('TollStation', tollStationSchema, 'Tolls');
+
+// API endpoint to analyze passes for a specific toll station using the tollID (stationOpID)
+app.get('/api/passAnalysis/:stationOpID', async (req, res) => {
+    try {
+        const { stationOpID } = req.params;
+
+        console.log(`Analyzing passes for toll station with tollID: ${stationOpID}`);
+
+        // Step 1: Fetch all passes for the specific toll station (using the tollID)
+        const passes = await Pass.find({ tollID: stationOpID });
+
+        if (passes.length === 0) {
+            console.log(`No passes found for toll station with tollID: ${stationOpID}`);
+            return res.status(204).send(); // No content
+        }
+
+        // Step 2: Perform analysis
+        const analysisResults = {
+            totalPasses: passes.length,
+            totalCharge: passes.reduce((sum, pass) => sum + pass.charge, 0),
+        averageCharge: (passes.reduce((sum, pass) => sum + pass.charge, 0) / passes.length).toFixed(2),
+        };
+
+        console.log('Pass analysis completed successfully');
+        res.status(200).json({
+            analysisResults,
+            passes, // Return the passes along with analysis results
+        });
+    } catch (error) {
+        console.error('Error during pass analysis:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+});
+
 
 // API endpoint to get all TollStations
 app.get('/api/tollStations', async (req, res) => {
@@ -252,8 +288,94 @@ app.get('/api/tollStationPasses/:tollStationID/:date_from/:date_to', async (req,
     }
 });
 
+// API endpoint to perform a health check and verify DB connectivity
+app.get('/api/admin/healthcheck', async (req, res) => {
+    try {
+        // Check if MongoDB is connected
+        const isConnected = mongoose.connection.readyState === 1;
+
+        // Retrieve counts of documents in the collections (toll stations, passes, and tags)
+        const n_stations = await TollStation.countDocuments();
+        const n_tags = await Pass.distinct('tagRef').countDocuments();  // Assuming 'tagRef' represents the tags
+        const n_passes = await Pass.countDocuments();
+
+        // Get the connection string (we'll return a simplified string for display purposes)
+        const dbconnection = mongoURI;
+
+        if (isConnected) {
+            console.log('Healthcheck: Connection is OK');
+
+            // Return a 200 status with the healthcheck info
+            return res.status(200).json({
+                status: 'OK',
+                dbconnection: dbconnection,
+                n_stations: n_stations,
+                n_tags: n_tags,
+                n_passes: n_passes,
+            });
+        } else {
+            console.log('Healthcheck: Database connection failed');
+
+            // Return a 401 status with the failed connection info
+            return res.status(401).json({
+                status: 'failed',
+                dbconnection: dbconnection,
+            });
+        }
+    } catch (error) {
+        console.error('Error during healthcheck:', error);
+
+        // Return a 401 status in case of unexpected errors
+        return res.status(401).json({
+            status: 'failed',
+            dbconnection: mongoURI,
+        });
+    }
+});
+
+// API endpoint to reset toll stations
+app.post('/api/admin/resetstations', async (req, res) => {
+    try {
+        // Path to the CSV file (make sure it's in the correct folder)
+        const csvFilePath = './data/tollstations2024.csv'; // Adjust the path if necessary
+
+        const tollStationsData = [];
+
+        // Parse the CSV file
+        fs.createReadStream(csvFilePath)
+        .pipe(csv())
+        .on('data', (row) => {
+            tollStationsData.push(row);
+        })
+        .on('end', async () => {
+            try {
+                // Step 1: Clear existing toll stations in the database
+                await TollStation.deleteMany();
+
+                // Step 2: Insert new toll stations from the CSV
+                const newTollStations = await TollStation.insertMany(tollStationsData);
+
+                // If everything went well, return success response
+                res.status(200).json({ status: 'OK' });
+            } catch (err) {
+                console.error('Error inserting toll stations:', err);
+                res.status(500).json({ status: 'failed', info: 'Failed to insert toll stations into the database.' });
+            }
+        })
+        .on('error', (err) => {
+            console.error('Error reading CSV file:', err);
+            res.status(500).json({ status: 'failed', info: 'Error reading the CSV file.' });
+        });
+    } catch (error) {
+        console.error('Error processing reset stations request:', error);
+        res.status(500).json({ status: 'failed', info: 'Failed to process the reset stations request.' });
+    }
+});
+
+
 // Set up a port for the API to listen on
 const port = 9115;
 app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}🚀`);
 });
+
