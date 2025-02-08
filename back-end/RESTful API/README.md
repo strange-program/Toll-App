@@ -7,6 +7,7 @@ This document serves as a checklist for API endpoint implementation and testing.
 ### Info Endpoints
 - [X] /tollStations
 - [X] /tollStationPasses
+- [X] /passes
 - [X] /tollStationPasses/:tollStationID/:date_from/:date_to
 - [ ] /passAnalysis/:stationOpID/:tagOpID/:date_from/:date_to
 - [ ] /passesCost/:tollOpID/:tagOpID/:date_from/:date_to
