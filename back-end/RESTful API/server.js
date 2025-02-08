@@ -74,6 +74,38 @@ function convertDateFormat(dateString) {
     return date.toISOString();
 }
 
+// API endpoint to get all TollStations
+app.get('/api/tollStations', async (req, res) => {
+    try {
+        const tollStations = await TollStation.find();
+        if (tollStations.length === 0) {
+            console.log('No toll stations found');
+            return res.status(204).send(); // No content
+        }
+        console.log('Toll stations fetched successfully');
+        res.status(200).json(tollStations); // OK
+    } catch (error) {
+        console.error('Error fetching toll stations:', error);
+        res.status(500).json({ message: 'Internal server error' }); // Server error
+    }
+});
+
+// API endpoint to get all Passes
+app.get('/api/tollStationPasses', async (req, res) => {
+    try {
+        const passes = await Pass.find();
+        if (passes.length === 0) {
+            console.log('No passes found');
+            return res.status(204).send(); // No content
+        }
+        console.log('Passes fetched successfully');
+        res.status(200).json(passes); // OK
+    } catch (error) {
+        console.error('Error fetching passes:', error);
+        res.status(500).json({ message: 'Internal server error' }); // Server error
+    }
+});
+
 // API endpoint to get passes for a specific toll station with a date range filter
 app.get('/api/tollStationPasses/:tollStationID/:date_from/:date_to', async (req, res) => {
     try {
