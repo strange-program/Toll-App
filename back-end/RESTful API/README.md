@@ -7,7 +7,7 @@ This document serves as a checklist for API endpoint implementation and testing.
 ### Info Endpoints
 - [X] /api/tollStations
 - [X] /api/tollStationPasses
-- [X] /api/passes
+- [ ] /api/passes
 - [X] /api/tollStationPasses/:tollStationID/:date_from/:date_to
 - [ ] /api/passAnalysis/:stationOpID/:tagOpID/:date_from/:date_to
 - [ ] /api/passesCost/:tollOpID/:tagOpID/:date_from/:date_to
@@ -24,10 +24,10 @@ This document serves as a checklist for API endpoint implementation and testing.
 - [ ] /api/logout
       
 ### Diagram Endpoints
-- [X] /api/getDiagram1
-- [X] /api/getDiagram2
+- [ ] /api/getDiagram1
+- [  /api/getDiagram2
 
 ### Payment Endpoints
-- [X] /api/postPayment
-- [X] /api/getAmountsDue
-- [X] /api/paymentsfrequency
+- [ ] /api/postPayment
+- [ ] /api/getAmountsDue
+- [ ] /api/paymentsfrequency
