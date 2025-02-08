@@ -25,7 +25,7 @@ This document serves as a checklist for API endpoint implementation and testing.
       
 ### Diagram Endpoints
 - [ ] /api/getDiagram1
-- [  /api/getDiagram2
+- [ ] /api/getDiagram2
 
 ### Payment Endpoints
 - [ ] /api/postPayment
