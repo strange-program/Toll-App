@@ -24,8 +24,8 @@ This document serves as a checklist for API endpoint implementation and testing.
 - [ ] /api/logout
       
 ### Diagram Endpoints
-- [ ] /api/getDiagram1
-- [ ] /api/getDiagram2
+- [X] /api/getDiagram1
+- [X] /api/getDiagram2
 
 ### Payment Endpoints
 - [ ] /api/postPayment
