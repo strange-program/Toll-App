@@ -21,8 +21,8 @@ This document serves as a checklist for API endpoint implementation and testing.
 - [X] /api/admin/register
 
 ### Auth Endpoints
-- [ ] /api/login
-- [ ] /api/logout
+- [X] /api/login
+- [X] /api/logout
       
 ### Diagram Endpoints
 - [X] /api/getDiagram1
