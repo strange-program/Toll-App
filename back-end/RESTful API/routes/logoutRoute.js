@@ -1,0 +1,34 @@
+const { authenticateToken, tokenBlacklist } = require('../utils/authentication_utils');
+const mongoose = require('mongoose');
+const TollStation = require('../models/tollStationModel');
+const Pass = require('../models/passModel');
+const User = require('../models/userModel');
+const moment = require('moment');
+
+
+
+const express = require('express');
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+const router = express.Router();
+
+const SECRET_KEY = "your_secret_key"; 
+
+
+router.post("/api/logout",authenticateToken ,(req, res) => {
+    const token = req.headers["x-observatory-auth"]; // Διαβάζουμε το token από το σωστό header
+    
+    if (!token) {
+        return res.status(400).json({ message: "No token provided" });
+    }
+    
+    try {
+        const decoded = jwt.verify(token, "your_secret_key");
+        tokenBlacklist.add(token); // Προαιρετικά, μπλοκάρουμε το token
+        return res.status(200).json({ message: "Logged out successfully" });
+    } catch (err) {console.log(err.message);
+        return res.status(401).json({ message: "Invalid token" });
+    }
+  });
+
+  module.exports=router;
