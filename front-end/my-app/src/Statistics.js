@@ -66,15 +66,21 @@ const Statistics = () => {
     { date: "2024-01-03", value: 60 ,Price1:2, Price2:3, Price3:9 , Price4:10},]
     
 */
+  console.log(selectedCompany);
+  console.log(startDate);
+  console.log(endDate);
   
-    fetch('http://localhost:9115/api/getDiagram1',{
-      method: "GET",
-      headers: { "Content-Type": "application/json" ,"X-OBSERVATORY-AUTH":localStorage.getItem("jwt")},
-      params: {
-        operator: selectedCompany,
-        startDate: start,
-        endDate: end
-      }
+  const url = new URL('http://localhost:9115/api/getDiagram1');
+  url.searchParams.append('operator', selectedCompany);
+  url.searchParams.append('startDate', startDate);
+  url.searchParams.append('endDate', endDate);
+  
+  fetch(url, {
+    method: "GET",
+    headers: { 
+      "Content-Type": "application/json",
+      "X-OBSERVATORY-AUTH": localStorage.getItem("jwt")
+    }
   })
         .then(response => {
         console.log(response.status);
@@ -84,7 +90,7 @@ const Statistics = () => {
        return response.json(); // Αν status = 200, συνεχίζουμε κανονικά
        })
         .then((data)=>{
-          
+          if(data.length === 0) alert("Δεν βρέθηκαν διελεύσεις για το επιλεγμένο χρονικό διάστημα")        
           setChartData(data);
           setPieData(generatePieData(data));//πίτα με το ποσοστό των οχημάτων κάθε τιμής για αυτές τις διελεύσεις
           }
@@ -92,7 +98,7 @@ const Statistics = () => {
         )
         .catch(error => {console.error('Error fetching passes:', error);
                             alert("Σφάλμα στην φόρτωση της σελίδας Στατιστικών");
-                            window.location.href='/homepage';})
+                            window.location.href='/statistics';})
  
   };
 //Η generateMockData δημιουργεί τυχαία δεδομένα με το εξής format
