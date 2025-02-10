@@ -1,10 +1,12 @@
 import React , { useState, useEffect } from 'react'
 import Footer from './Footer'
+import { Link } from "react-router-dom";
 
 function Cost (){
 
       const [amountDue, setAmountDue] = useState([]);
-      
+
+      const Companies=["aegeanmotorway","egnatia","gefyra","kentrikiodos","moreas","naodos","neaodos","olympiaodos"];
 
 
 
@@ -33,6 +35,7 @@ function Cost (){
                 .then((data)=>{
                   const labels = data.map((item) => item.label);
                    setAmountDue(data.map((item) => item.value));
+                   console.log(amountDue);
                   }
                    
                 )
@@ -44,36 +47,52 @@ function Cost (){
         }, []);
 
 
-        const handleSubmit = async (e, operator, amount) => {
-          e.preventDefault();
+        function handleSubmit(e, operator, amount) {
           
-          try {
-              const response = await fetch('http://localhost:9115/api/postPayment', {
-                  method: 'POST',
-                  headers: { 
-                      'Content-Type': 'application/json',
-                      "X-OBSERVATORY-AUTH": localStorage.getItem("jwt") 
-                  },
-                  body: JSON.stringify({ company: operator, money: amount })
-              });
-      
-              if (response.ok) {
+          e.preventDefault();
+          console.log("submit!");
+          
+          let list=[];
+
+          let result=operator;
+
+          if(operator === 'all'){console.log("all");       
+            
+            for(let i=0; i<8; i++){
+
+              if(amountDue[i]<0){list.push(Companies[i]);}
+            }
+
+             result = list.join(",");
+            }
+
+              fetch("http://localhost:9115/api/postPayment", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" ,"X-OBSERVATORY-AUTH":localStorage.getItem("jwt")},
+                body: JSON.stringify({ company: result, money: amount })
+            })
+            .then(response => {
+              console.log(response.status);
+                if (response.ok) {
+                  window.location.href='/paysuccess';
+                }
+                else {
+                  window.location.href='/payfail'; 
+                }
                 
-                window.location.href='/paysuccess'; 
-                
-              } else {
-                window.location.href='/payfail'; 
-              }
-          } catch (error) {
-            window.location.href='/payfail'; 
-          }
-      };
+            })
+            
+            
+
+
+          } ;
       
       
         let total=0;
 
         for(let i=0; i<8; i++)
         {  if(Number(amountDue[i])<0)  total=total+Number(amountDue[i]);}
+        total=(total).toFixed(2) ;
      
 return (
 <div>
@@ -175,7 +194,7 @@ return (
  </div>
 
   <div class="col-md-4">
-<div>{amountDue[4]}€</div>
+<div>{amountDue[5]}€</div>
  </div> 
 
  <div class="col-md-4">
@@ -228,11 +247,22 @@ return (
  <div class="col-md-4">
     
     <form onSubmit={(event) => handleSubmit(event, 'all',total)}>    
-    <button type="submit"className="btn btn-outline-primary"  disabled={ amountDue.length === 0|| total === 0} >Pay All</button>
+    <button type="submit"className="btn btn-outline-primary"  disabled={ amountDue.length === 0|| total >= 0} >Pay All</button>
     </form>
+    <br></br>
+    <button type="button" class="btn btn-success btn-lg"><Link className="nav-link" to="/homepage">Επιστροφή στην Αρχική</Link></button>
+</div>
+
+
+<div>
+<a>*Τα ποσά με θετικό πρόσημο αντιστοιχούν στις οφειλές από τους υπόλοιπους λειτουργούς (δεν εξοφλούνται από τον παρόντα λειτουργό)</a>
+<br></br>
+<a>*Τα ποσά με αρνητικό πρόσημο αντιστοιχούν στις οφειλές προς τους υπόλοιπους λειτουργούς (εξοφλούνται από τον παρόντα λειτουργό)</a>
+
 </div>
 
 </div>
+
 <Footer/>
 </div>
 
