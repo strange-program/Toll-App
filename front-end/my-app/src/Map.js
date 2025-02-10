@@ -26,17 +26,30 @@ const TollMap = () => {
 
   useEffect(() => {
     if (!selectedToll || !startDate || !endDate) return; 
+    
+    let start=new Date(startDate);
+    let end=new Date(endDate);
+   ;
 
+    if( start > end ) alert("Εισάγετε έγκυρο χρονικό διάστημα");
     //Το backend πρέπει να επιστρέφει ένα json της μορφής {passes:9}
-    fetch("http://localhost:9115/api/passes", {
-      method: "GET",
-      headers: { "Content-Type": "application/json" ,"X-OBSERVATORY-AUTH":localStorage.getItem("jwt")},
-      params: {
-        stationId: selectedToll.TollID,
-        startDate: startDate,
-        endDate: endDate
-      }
-  })
+    
+    else{
+      console.log(selectedToll.TollID);
+      console.log(startDate);
+      console.log(endDate);
+      const url = new URL('http://localhost:9115/api/passes');
+      url.searchParams.append('stationId', selectedToll.TollID);
+      url.searchParams.append('startDate', startDate);
+      url.searchParams.append('endDate', endDate);
+      
+      fetch(url, {
+        method: "GET",
+        headers: { 
+          "Content-Type": "application/json",
+          "X-OBSERVATORY-AUTH": localStorage.getItem("jwt")
+        }
+      })
   .then(response => {
     console.log(response.status);
       if (!response.ok) {
@@ -52,6 +65,7 @@ const TollMap = () => {
     console.error("Error fetching passes:", error);
   });
 
+    }
   }, [selectedToll, startDate, endDate]); // Επαναφόρτωση όταν αλλάζουν τα φίλτρα
 
   /*
@@ -143,4 +157,3 @@ const TollMap = () => {
 
     
 export default TollMap;
-
