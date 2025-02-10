@@ -1,5 +1,5 @@
+require('dotenv').config({path: '../../config.env'});
 const express = require('express');
-const mongoose = require('mongoose');
 const connectDB = require('./db');  // Import the connectDB function
 const cors = require("cors");
 
@@ -31,6 +31,7 @@ connectDB();  // Call the connectDB function to establish the connection
 app.use('/api', functionalRoutes)
 // Define Admin Endpoint routes 
 app.use('/api/admin', adminRoutes);
+
 app.use('/api/tollStations', tollStationRoutes);
 app.use('/api/tollStationPasses', passRoutesSimple);
 app.use(tollMapRoutes);  //api/passes 
