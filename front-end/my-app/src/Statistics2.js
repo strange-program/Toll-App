@@ -37,15 +37,22 @@ const Statistics2 = () => {
 
 
   const fetchData = (start,end) => {  
-   fetch('http://localhost:9115/api/getDiagram2',{
+    
+    console.log(startDate);
+    console.log(endDate);
+
+    const url = new URL('http://localhost:9115/api/getDiagram2');
+    url.searchParams.append('startDate', startDate);
+    url.searchParams.append('endDate', endDate);
+    
+    fetch(url, {
       method: "GET",
-      headers: { "Content-Type": "application/json" ,"X-OBSERVATORY-AUTH":localStorage.getItem("jwt")},
-      params: {
-        startDate: start,
-        endDate: end
+      headers: { 
+        "Content-Type": "application/json",
+        "X-OBSERVATORY-AUTH": localStorage.getItem("jwt")
       }
-  })
-        .then(response => {
+    })
+    .then(response => {
         console.log(response.status);
          if (!response.ok) {
           return response.json().then(err => { throw new Error(err.message); }); // Αν status ≠ 200, πετάμε error με το μήνυμα του server
@@ -53,9 +60,12 @@ const Statistics2 = () => {
        return response.json(); // Αν status = 200, συνεχίζουμε κανονικά
        })
         .then((data)=>{
-          
+          if(data.length === 0) {alert("Δεν υπάρχουν διελεύσεις στο διάστημα που ζητήσατε");}
+          else{
+            console.log(data);
           setChartData(data);
           setPieData(generatePieData(data));//πίτα με το ποσοστό των διελεύσεων ανά εταιρεία
+        }
           }
            
         )
@@ -141,3 +151,4 @@ const Statistics2 = () => {
 };
 
 export default Statistics2;
+
