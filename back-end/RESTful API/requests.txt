@@ -1,0 +1,23 @@
+GET http://localhost:9115/api/tollStationPasses/NAO30/20220101/20230110
+
+{"stationID":"NAO30","stationOperator":"naodos","requestTimestamp":"2025-02-09 11:13","periodFrom":"20220101","periodTo":"20230110","nPasses":8,"passList":[{"passIndex":1,"passID":"6790044356f00e0ddc48355f","timestamp":"2022-01-01 00:23","tagID":"NAO5ZJA8DZ","tagProvider":"NAO","passType":"visitor","passCharge":2.5},{"passIndex":2,"passID":"6790044356f00e0ddc483614","timestamp":"2022-01-03 18:23","tagID":"NAOHAFEYUH","tagProvider":"NAO","passType":"visitor","passCharge":2.5},{"passIndex":3,"passID":"6790044356f00e0ddc4836a9","timestamp":"2022-01-05 22:51","tagID":"EGUT0CVS4","tagProvider":"EG","passType":"visitor","passCharge":2.5},{"passIndex":4,"passID":"6790044356f00e0ddc4836ae","timestamp":"2022-01-06 00:30","tagID":"NAONSM43D8","tagProvider":"NAO","passType":"visitor","passCharge":2.5},{"passIndex":5,"passID":"6790044356f00e0ddc4836d8","timestamp":"2022-01-06 15:03","tagID":"NAOP0J43D5","tagProvider":"NAO","passType":"visitor","passCharge":2.5},{"passIndex":6,"passID":"6790044356f00e0ddc4837b4","timestamp":"2022-01-09 16:40","tagID":"NAOBMYOFQE","tagProvider":"NAO","passType":"visitor","passCharge":2.5},{"passIndex":7,"passID":"6790044356f00e0ddc4838ac","timestamp":"2022-01-12 20:18","tagID":"NAONSM43D8","tagProvider":"NAO","passType":"visitor","passCharge":2.5},{"passIndex":8,"passID":"6790044356f00e0ddc4838c3","timestamp":"2022-01-13 02:32","tagID":"EGVWPVS7H","tagProvider":"EG","passType":"visitor","passCharge":2.5}]}
+
+GET http://localhost:9115/api/passAnalysis/NAO30/NAO/20220101/20230110
+
+{"stationOpID":"NAO30","tagOpID":"NAO","requestTimestamp":"2025-02-09 11:28","periodFrom":"20220101","periodTo":"20230110","nPasses":6,"passList":[{"passIndex":1,"passID":"6790044356f00e0ddc48355f","timestamp":"2022-01-01 00:23","tagID":"NAO5ZJA8DZ","tagProvider":"NAO","passType":"visitor","passCharge":2.5},{"passIndex":2,"passID":"6790044356f00e0ddc483614","timestamp":"2022-01-03 18:23","tagID":"NAOHAFEYUH","tagProvider":"NAO","passType":"visitor","passCharge":2.5},{"passIndex":3,"passID":"6790044356f00e0ddc4836ae","timestamp":"2022-01-06 00:30","tagID":"NAONSM43D8","tagProvider":"NAO","passType":"visitor","passCharge":2.5},{"passIndex":4,"passID":"6790044356f00e0ddc4836d8","timestamp":"2022-01-06 15:03","tagID":"NAOP0J43D5","tagProvider":"NAO","passType":"visitor","passCharge":2.5},{"passIndex":5,"passID":"6790044356f00e0ddc4837b4","timestamp":"2022-01-09 16:40","tagID":"NAOBMYOFQE","tagProvider":"NAO","passType":"visitor","passCharge":2.5},{"passIndex":6,"passID":"6790044356f00e0ddc4838ac","timestamp":"2022-01-12 20:18","tagID":"NAONSM43D8","tagProvider":"NAO","passType":"visitor","passCharge":2.5}]}
+
+GET http://localhost:9115/api/passesCost/NAO/NAO/20220101/20230110
+
+{"tollOpID":"NAO","tagOpID":"NAO","requestTimestamp":"2025-02-09 11:30","periodFrom":"20220101","periodTo":"20230110","nPasses":158,"passesCost":0}
+
+GET http://localhost:9115/api/passesCost/AM/NAO/20220101/20230110
+
+{"tollOpID":"AM","tagOpID":"NAO","requestTimestamp":"2025-02-09 11:31","periodFrom":"20220101","periodTo":"20230110","nPasses":14,"passesCost":39.5}
+
+GET http://localhost:9115/api/chargesBy/NAO/20220101/20230110
+
+{"tollOpID":"NAO","requestTimestamp":"2025-02-09 11:32","periodFrom":"20220101","periodTo":"20230110","vOpList":[{"visitingOpID":"OO","nPasses":11,"passesCost":27.5},{"visitingOpID":"AM","nPasses":13,"passesCost":32.5},{"visitingOpID":"NO","nPasses":13,"passesCost":32.5},{"visitingOpID":"EG","nPasses":26,"passesCost":65},{"visitingOpID":"KO","nPasses":10,"passesCost":25},{"visitingOpID":"GE","nPasses":1,"passesCost":2.5},{"visitingOpID":"MO","nPasses":3,"passesCost":7.5}]}
+
+GET http://localhost:9115/api/admin/healthcheck
+
+{"status":"OK","dbconnection":"mongodb://localhost:27017/TollDatabase","n_stations":253,"n_tags":1002,"n_passes":1002}
