@@ -21,26 +21,29 @@ function App() {
     <Routes>
         
   <Route path="/" element={<Login />} />
+
+  <Route path="/tollmap" element={<TollMap />} />
+   
+    <Route path="/statistics2" element={<Statistics2 />} />
+
+    <Route path="/homepage" element={<Home />} />
+
+    <Route path="/statistics" element={<Statistics />} />
    
    <Route element={<ProtectedRoute />}>
-   
-        <Route path="/homepage" element={<Home />} />
+  
    
         <Route path="/frequency" element={<PaymentsFrequency />} />
   
         <Route path="/payments" element={<Cost />} />
-  
-        <Route path="/statistics" element={<Statistics />} />
-  
-        <Route path="/logout" element={<Logout />} />
+         
+         <Route path="/logout" element={<Logout />} />
 
         <Route path="/paysuccess" element={<PaySuccess />} />
 
           <Route path="/payfailure" element={<PayFailure />} />
  
-        <Route path="/tollmap" element={<TollMap />} />
-   
-        <Route path="/statistics2" element={<Statistics2 />} />
+        
 </Route>
 
 <Route path="*" element={<Navigate to="/" />} />
@@ -50,3 +53,4 @@ function App() {
 }
 
 export default App;
+
