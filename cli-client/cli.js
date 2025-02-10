@@ -366,6 +366,7 @@ program
   .option("--usermod","Add new users or change password of existing user")
   .option("--username <usr>","Username to create/modify")
   .option("--passw <passw>","Password of user")
+  .option("--users","Request all the usernames in the Database")
   .action(async(options) => {
       if (options.addpasses) {
         if (!options.source) {
@@ -418,6 +419,15 @@ program
           console.error("Error creating user:", error.response?.data || error.message);
         }
 
+      }
+      else if (options.users) {
+        try {
+          const response = await axios.get(API_BASE_URL + "/api/admin/getUsers");
+          console.log(response.data);
+
+        } catch (error) {
+          console.error("Error fetchig users:", error.response?.data || error.message);
+        }
       }
       else {
         console.log("Error: Use parameter --usermod to add/modify users or --addpasses to add toll info");
