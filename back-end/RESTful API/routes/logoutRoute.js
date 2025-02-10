@@ -12,22 +12,27 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const router = express.Router();
 
-const SECRET_KEY = "your_secret_key"; 
+const SECRET_KEY = process.env.SECRET_KEY || "your_secret_key"; 
 
 
 router.post("/api/logout",authenticateToken ,(req, res) => {
-    const token = req.headers["x-observatory-auth"]; // Διαβάζουμε το token από το σωστό header
-    
-    if (!token) {
-        return res.status(400).json({ message: "No token provided" });
-    }
-    
     try {
-        const decoded = jwt.verify(token, "your_secret_key");
-        tokenBlacklist.add(token); // Προαιρετικά, μπλοκάρουμε το token
-        return res.status(200).json({ message: "Logged out successfully" });
-    } catch (err) {console.log(err.message);
-        return res.status(401).json({ message: "Invalid token" });
+        const token = req.headers["x-observatory-auth"]; // Διαβάζουμε το token από το σωστό header
+    
+        if (!token) {
+            return res.status(400).json({ message: "No token provided" });
+        }
+    
+        try {
+            const decoded = jwt.verify(token, "your_secret_key");
+            tokenBlacklist.add(token); // Προαιρετικά, μπλοκάρουμε το token
+            return res.status(200).json({ message: "Logged out successfully" });
+        } catch (err) {console.log(err.message);
+            return res.status(401).json({ message: "Invalid token" });
+        }
+    }
+    catch (error) {
+        res.status(500).json({ message: 'Internal server error' });
     }
   });
 
