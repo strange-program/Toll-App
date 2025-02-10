@@ -31,4 +31,3 @@ This document serves as a checklist for API endpoint implementation and testing.
 ### Payment Endpoints
 - [X] /api/postPayment
 - [X] /api/getAmountsDue
-- [ ] /api/paymentsfrequency
