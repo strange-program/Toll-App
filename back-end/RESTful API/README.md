@@ -29,6 +29,6 @@ This document serves as a checklist for API endpoint implementation and testing.
 - [X] /api/getDiagram2
 
 ### Payment Endpoints
-- [ ] /api/postPayment
+- [X] /api/postPayment
 - [ ] /api/getAmountsDue
 - [ ] /api/paymentsfrequency
