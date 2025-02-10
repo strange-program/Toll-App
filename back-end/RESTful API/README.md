@@ -15,7 +15,7 @@ This document serves as a checklist for API endpoint implementation and testing.
 
 ### Admin Endpoints
 - [X] /api/admin/healthcheck
-- [ ] /api/admin/resetstations
+- [X] /api/admin/resetstations
 - [ ] /api/admin/resetpasses
 - [X] /api/admin/addpasses
 - [X] /api/admin/register
