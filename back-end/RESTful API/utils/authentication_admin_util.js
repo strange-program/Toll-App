@@ -16,7 +16,7 @@
         
             try {
                 const decoded = jwt.verify(token, "your_secret_key"); // Επαλήθευση του token
-                if(decoded.username != "admin") return res.status(401).json({ message: "Access denied. Only admin is permitted" });
+                if(decoded.username != "admin1") return res.status(401).json({ message: "Access denied. Only admin is permitted" });
                 req.user = decoded; // Αποθηκεύουμε τα στοιχεία του χρήστη στο request
                 next(); // Συνεχίζουμε στο επόμενο middleware / route handler
             } catch (err) {
