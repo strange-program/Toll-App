@@ -1,5 +1,5 @@
 const express = require('express');
-const { upload } = require('../utils/upload');
+const { upload } = require('../utils/new_upload');
 const router = express.Router();
 
 const { healthCheck } = require('../controllers/healthcheckController');
