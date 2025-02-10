@@ -1,21 +1,24 @@
 const express = require('express');
 const multer = require('multer');
 const { upload } = require('../utils/upload');
+const {authenticateTokenAdmin}=require('../utils/authentication_admin_util');
+const {authenticateToken}=require('../utils/authentication_utils');
 const router = express.Router();
 
 const { healthCheck } = require('../controllers/healthcheckController');
-router.get('/healthcheck', healthCheck);
+router.get('/healthcheck', authenticateTokenAdmin,healthCheck);
 
 const { resetstations } = require('../controllers/resetstationsController');
-router.get('/resetstations', resetstations);
+router.get('/resetstations', authenticateTokenAdmin,resetstations);
 
 const { resetpasses } = require('../controllers/resetpassesController');
-router.get('/resetpasses', resetpasses);
+router.get('/resetpasses', authenticateTokenAdmin,resetpasses);
 
 const { addPasses } = require('../controllers/addPassesController');
-router.post('/addpasses', upload.single('file'),addPasses);
+router.post('/addpasses', authenticateTokenAdmin,upload.single('file'),addPasses);
+
 
 const { getUsers } = require('../controllers/getUsersController');
-router.get('/getUsers', getUsers);
+router.get('/getUsers', authenticateTokenAdmin ,getUsers);
 
 module.exports = router;
