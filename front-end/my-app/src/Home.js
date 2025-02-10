@@ -35,9 +35,9 @@ function Home(){
   onMouseLeave={(e) => e.target.style.color = navItemStyle.color}>Στατιστικά Διελεύσεων</Link>
               </li>
               <li className="nav-item">
-              <Link className="nav-link" to="/frequency"  style={navItemStyle} 
+              <Link className="nav-link" to="/logout"  style={navItemStyle} 
   onMouseEnter={(e) => e.target.style.color = navItemHoverStyle.color}
-  onMouseLeave={(e) => e.target.style.color = navItemStyle.color}>Στατιστικά Πληρωμών</Link>
+  onMouseLeave={(e) => e.target.style.color = navItemStyle.color}>Logout</Link>
               </li>
               <li className="nav-item">
               <Link className="nav-link" to="/payments"  style={navItemStyle} 
