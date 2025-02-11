@@ -9,10 +9,10 @@ const { healthCheck } = require('../controllers/healthcheckController');
 router.get('/healthcheck', authenticateTokenAdmin,healthCheck);
 
 const { resetstations } = require('../controllers/resetstationsController');
-router.get('/resetstations', authenticateTokenAdmin,resetstations);
+router.post('/resetstations', authenticateTokenAdmin,resetstations);
 
 const { resetpasses } = require('../controllers/resetpassesController');
-router.get('/resetpasses', authenticateTokenAdmin,resetpasses);
+router.post('/resetpasses', authenticateTokenAdmin,resetpasses);
 
 const { addPasses } = require('../controllers/addPassesController');
 router.post('/addpasses', authenticateTokenAdmin,upload.single('file'),addPasses);
