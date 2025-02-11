@@ -25,7 +25,7 @@ const tollStationPasses = async (req, res) => {
         // Find toll station
         const tollStation = await TollStation.findOne({ TollID: tollStationID });
         if (!tollStation) {
-            return res.status(404).json({ message: 'Toll station not found' });
+            return res.status(400).json({ message: 'Toll station not found' });
         }
   
         // Query MongoDB for passes within the date range
