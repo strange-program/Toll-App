@@ -7,6 +7,7 @@ const router = express.Router();
 
 const { healthCheck } = require('../controllers/healthcheckController');
 router.post('/healthcheck', authenticateTokenAdmin,healthCheck);
+router.get('/healthcheck', authenticateTokenAdmin,healthCheck);
 
 const { resetstations } = require('../controllers/resetstationsController');
 router.post('/resetstations', authenticateTokenAdmin,resetstations);
