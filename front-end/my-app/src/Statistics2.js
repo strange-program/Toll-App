@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import Highcharts from "highcharts";
 import { Link } from "react-router-dom";
 import HighchartsReact from "highcharts-react-official";
-import Footer from './Footer';
+import { saveAs } from "file-saver";
 
 
 const Statistics2 = () => {
@@ -10,6 +10,7 @@ const Statistics2 = () => {
   const [endDate, setEndDate] = useState("");
   const [chartData, setChartData] = useState([]);
   const [pieData, setPieData] = useState([]);
+  const [Ddata, setDdata] = useState([]);
 
   const companies=["aegeanmotorway" ,"egnatia","gefyra","kentrikiodos","moreas", "naodos","neaodos","olympiaodos"];
     
@@ -60,6 +61,7 @@ const Statistics2 = () => {
        return response.json(); // Αν status = 200, συνεχίζουμε κανονικά
        })
         .then((data)=>{
+          setDdata(data); 
           if(data.length === 0) {alert("Δεν υπάρχουν διελεύσεις στο διάστημα που ζητήσατε");}
           else{
             console.log(data);
@@ -74,17 +76,7 @@ const Statistics2 = () => {
                             window.location.href='/homepage';})
 
   };
-/*
-  const generateMockData = (start, end) => {
-    let data = companies.map(company => {
-      return {
-        name: company,
-        y: Math.floor(Math.random() * 500)
-      };
-    });
-    return data;
-  };
-*/
+
   const generatePieData = (data) => {
     const total = data.reduce((sum, company) => sum + company.y, 0);
     return data.map(company => ({
@@ -127,6 +119,19 @@ const Statistics2 = () => {
     }]
   }
 
+  const convertToCSV = (jsonData) => {
+    const headers = Object.keys(jsonData[0]).join(",") + "\n";
+    const rows = jsonData.map((row) => Object.values(row).join(",")).join("\n");
+    return headers + rows;
+  };
+  
+  const downloadCSV = () => {
+    if(Ddata.length === 0) {alert("Δεν υπάρχουν δεδομένα για το διάστημα που ζητήσατε");   return;}
+    const csvData = convertToCSV(Ddata);
+    const blob = new Blob([csvData], { type: "text/csv;charset=utf-8;" });
+    saveAs(blob, "data.csv");
+  };
+
   return (
     <div>
       <h2>Φίλτρα Αναζήτησης</h2>
@@ -134,16 +139,20 @@ const Statistics2 = () => {
       <input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
       <label>End Date:</label>
       <input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} />
+   
       <HighchartsReact highcharts={Highcharts} options={chartOptions} />
       <HighchartsReact highcharts={Highcharts} options={pieChartOptions} />
-      
-        
+      <br></br>
       <div className="position-relative">
 
       <div className="position-absolute bottom-0 end-0">
-       <button type="button" class="btn btn-success btn-lg"><Link className="nav-link" to="/homepage">Επιστροφή στην Αρχική</Link></button>
+       <button type="button" className="btn btn-success btn-lg"><Link className="nav-link" to="/homepage">Επιστροφή στην Αρχική</Link></button>
       </div>
-      <Footer/>
+       <div className="position-absolute bottom-0 start-0">
+        <button onClick={downloadCSV} className="btn btn-success btn-lg">
+        Download CSV
+      </button> 
+   </div>
 
        </div>
     </div>
