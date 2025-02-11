@@ -295,9 +295,17 @@ program
   .command("healthcheck")
   .description("Check end-to-end connectivity with the database")
   .action(async(options) => {
+    if (!fs.existsSync(path.join(__dirname, "token.txt"))) {
+      console.log("No user is currently logged in.");
+      return;
+    }
+
+    const token = fs.readFileSync(path.join(__dirname, "token.txt"), "utf-8");
+    
     // Perform API call
     try {
-      const response = await axios.get(API_BASE_URL + "/api/admin/healthcheck");
+      axios.defaults.headers.common["X-OBSERVATORY-AUTH"] = token;
+      const response = await axios.post(API_BASE_URL + "/api/admin/healthcheck");
 
       // Check for error status codes
       switch(response.status) {
@@ -327,8 +335,16 @@ program
   .command("resetstations")
   .description("Reset toll station information")
   .action(async(options) => {
+    if (!fs.existsSync(path.join(__dirname, "token.txt"))) {
+      console.log("No user is currently logged in.");
+      return;
+    }
+
+    const token = fs.readFileSync(path.join(__dirname, "token.txt"), "utf-8");
+
     try {
-      const response = await axios.get(API_BASE_URL + "/api/admin/resetstations");
+      axios.defaults.headers.common["X-OBSERVATORY-AUTH"] = token;
+      const response = await axios.post(API_BASE_URL + "/api/admin/resetstations");
   
       const data = response.data;
       console.log(data);
@@ -345,8 +361,16 @@ program
   .command("resetpasses")
   .description("Reset passes data")
   .action(async(options) => {
+    if (!fs.existsSync(path.join(__dirname, "token.txt"))) {
+      console.log("No user is currently logged in.");
+      return;
+    }
+
+    const token = fs.readFileSync(path.join(__dirname, "token.txt"), "utf-8");
+
     try {
-      const response = await axios.get(API_BASE_URL + "/api/admin/resetpasses");
+      axios.defaults.headers.common["X-OBSERVATORY-AUTH"] = token;
+      const response = await axios.post(API_BASE_URL + "/api/admin/resetpasses");
   
       const data = response.data;
       console.log(data);
@@ -368,71 +392,82 @@ program
   .option("--passw <passw>","Password of user")
   .option("--users","Request all the usernames in the Database")
   .action(async(options) => {
-      if (options.addpasses) {
-        if (!options.source) {
-          console.log("Error: --source is a required parameter:\n --source: name of the file containing passes");
-          return;
-        }
-        
-        try {
-          // Ensure the file exists
-          if (!fs.existsSync(options.source)) {
-            console.error('Error: File does not exist.');
-            return;
-          }
-    
-          // Create FormData object
-          const formData = new FormData();
-          formData.append('file', fs.createReadStream(options.source), path.basename(options.source));
-    
-          // Get headers for multipart/form-data
-          const headers = {
-            ...formData.getHeaders(),
-            //'X-OBSERVATORY-AUTH': 'your-auth-token', // Replace with actual auth token
-          };
-          // Send request
-          const response = await axios.post(API_BASE_URL + "/api/admin/addpasses", 
-            formData,
-            { headers });
-    
-          console.log('Upload successful:', response.data);
-        } catch (error) {
-          console.error('Error uploading file:', error.response?.data || error.message);
-        }
 
-      }
-      else if (options.usermod) {
-        if (!options.username || !options.passw) {
-          console.log("Error: --username and --passw are required parameters:\n --username: username to insert/modify\n --passw: user password");
-          return;
-        }
+    if (!fs.existsSync(path.join(__dirname, "token.txt"))) {
+      console.log("No user is currently logged in.");
+      return;
+    }
+    const token = fs.readFileSync(path.join(__dirname, "token.txt"), "utf-8");
 
-        try {
-          const response = await axios.post(API_BASE_URL + "/api/admin/register", {
-            username: options.username,
-            password: options.passw,
-          });
-
-          console.log(response.data);
-
-        } catch (error) {
-          console.error("Error creating user:", error.response?.data || error.message);
-        }
-
-      }
-      else if (options.users) {
-        try {
-          const response = await axios.get(API_BASE_URL + "/api/admin/getUsers");
-          console.log(response.data);
-
-        } catch (error) {
-          console.error("Error fetchig users:", error.response?.data || error.message);
-        }
-      }
-      else {
-        console.log("Error: Use parameter --usermod to add/modify users or --addpasses to add toll info");
+    if (options.addpasses) {
+      if (!options.source) {
+        console.log("Error: --source is a required parameter:\n --source: name of the file containing passes");
         return;
       }
+        
+      try {
+        // Ensure the file exists
+        if (!fs.existsSync(options.source)) {
+          console.error('Error: File does not exist.');
+          return;
+        }
+    
+        // Create FormData object
+        const formData = new FormData();
+        formData.append('file', fs.createReadStream(options.source), path.basename(options.source));
+    
+        // Get headers for multipart/form-data
+        const headers = {
+          ...formData.getHeaders(),
+            //'X-OBSERVATORY-AUTH': 'your-auth-token', // Replace with actual auth token
+        };
+
+        // Send request
+        axios.defaults.headers.common["X-OBSERVATORY-AUTH"] = token;
+        const response = await axios.post(API_BASE_URL + "/api/admin/addpasses", 
+          formData,
+          { headers });
+    
+        console.log('Upload successful:', response.data);
+      } catch (error) {
+        console.error('Error uploading file:', error.response?.data || error.message);
+      }
+
+    }
+    else if (options.usermod) {
+      if (!options.username || !options.passw) {
+        console.log("Error: --username and --passw are required parameters:\n --username: username to insert/modify\n --passw: user password");
+        return;
+      }
+
+      try {
+        axios.defaults.headers.common["X-OBSERVATORY-AUTH"] = token;
+        const response = await axios.post(API_BASE_URL + "/api/admin/register", {
+          username: options.username,
+          password: options.passw,
+        });
+
+        console.log(response.data);
+
+      } catch (error) {
+        console.error("Error creating user:", error.response?.data || error.message);
+      }
+
+    }
+    else if (options.users) {
+      try {
+        axios.defaults.headers.common["X-OBSERVATORY-AUTH"] = token;
+        const response = await axios.get(API_BASE_URL + "/api/admin/getUsers");
+        console.log(response.data);
+
+      } catch (error) {
+        console.error("Error fetchig users:", error.response?.data || error.message);
+      }
+    }
+    else {
+      console.log("Error: Use parameter --usermod to add/modify users or --addpasses to add toll info");
+      return;
+    }
 
 });
 
@@ -466,6 +501,12 @@ program
   .description("Logout from the app")
   .action(async(options) => {
     try {
+      
+      if (!fs.existsSync(path.join(__dirname, "token.txt"))) {
+        console.log("No user is currently logged in.");
+        return;
+      }
+
       const token = fs.readFileSync(path.join(__dirname, "token.txt"), "utf-8");
 
       const response = await axios.post(
