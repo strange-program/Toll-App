@@ -21,6 +21,14 @@ const passAnalysis = async (req, res) => {
             return res.status(400).json({ message: 'Invalid date range: start date cannot be later than end date' });
         }
 
+        const operators = new Set(['AM', 'EG', 'GE', 'KO', 'MO', 'NAO', 'NO', 'OO'])
+        if(!(operators.has(stationOpID))) {
+            return res.status(400).json({ message: 'Invalid Station Operator ID: no operator with that ID' });
+        }
+        if(!(operators.has(tagOpID))) {
+            return res.status(400).json({ message: 'Invalid Tag Operator ID: no operator with that ID' });
+        }
+        
         // Query MongoDB for passes that satisfy the IDs for toll and tag
         // The first 2 characters of tollID and tagRef are the OpID of the owner of the toll and tag respectively
         const passes = await Pass.find({
