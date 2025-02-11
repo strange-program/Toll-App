@@ -7,6 +7,7 @@ const os = require('os');
 const express = require('express');
 const TollStation = require('../models/tollStationModel');
 const Pass = require('../models/passModel');
+const { checkAndFormatDate } = require('../utils/checkAndFormatDate_util');
 
 
 
@@ -40,18 +41,20 @@ const addPasses = async (req, res) => {
     });
 
     passesToInsert = csvData.map(row => {
-
-      if (!row.timestamp || !row.tollID || !row.tagRef || !row.tagHomeID || isNaN(parseFloat(row.charge))) {
-        console.warn('Skipping invalid row:', row);
-        return null;
-      }
+      
+    const values = row["timestamp;tollID;tagRef;tagHomeID;charge"].split(";");
+  
+  if (values.length !== 5) {
+    console.warn("Skipping invalid row:", row);
+    return null;
+  }
 
       return {
-        timestamp: row.timestamp, // Use the timestamp directly, no conversion
-        tollID: row.tollID,
-        tagRef: row.tagRef,
-        tagHomeID: row.tagHomeID,
-        charge: parseFloat(row.charge)
+        timestamp: convertTimestamp(values[0]), // Use the timestamp directly, no conversion
+        tollID: values[1],
+        tagRef: values[2],
+        tagHomeID: values[3],
+        charge: parseFloat(values[4])
       };
     }).filter(pass => pass !== null);
 
@@ -71,6 +74,29 @@ const addPasses = async (req, res) => {
   }
 };
 
+function convertTimestamp(timestamp) {
+  // Διαχωρίζουμε ημερομηνία & ώρα
+  let [datePart, timePart, meridian] = timestamp.split(/[\s]+/); // Διαχωρισμός με κενά
 
+  // Σπάμε την ημερομηνία
+  let [day, month, year] = datePart.split("/");
+
+  // Σπάμε την ώρα
+  let [hours, minutes] = timePart.split(":");
+
+  // Μετατροπή ώρας σε 24ωρη μορφή
+  hours = parseInt(hours, 10);
+  if (meridian === "μμ" && hours !== 12) {
+      hours += 12; // Αν είναι μμ (PM) προσθέτουμε 12 ώρες
+  } else if (meridian === "πμ" && hours === 12) {
+      hours = 0; // Αν είναι 12 πμ (μεσάνυχτα) το κάνουμε 00
+  }
+
+  // Δημιουργούμε την input μορφή για checkAndFormatDate
+  let formattedDate = `${year}${month.padStart(2, "0")}${day.padStart(2, "0")}`;
+  let formattedTime = `${hours.toString().padStart(2, "0")}${minutes}`;
+  // Καλούμε τη συνάρτηση
+  return checkAndFormatDate(formattedDate, formattedTime);
+}
 
 module.exports = { addPasses };
