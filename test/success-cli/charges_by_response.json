@@ -1,0 +1,3 @@
+{
+    "output": "Error: Invalid date format used in parameter --from. Use YYYYMMDD.\nError: Invalid date format used in parameter --to. Use YYYYMMDD."
+}
