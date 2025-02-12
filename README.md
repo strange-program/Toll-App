@@ -31,7 +31,7 @@
 - Το frontend είναι διαθέσιμο στο http://localhost:3000/
 - Για τα API endpoints μπορείτε να συμβουλευθείτε το ocumentation στο: softeng24-20/documentation
 /OpenAPI 3.0 Documentation ή το Postman Collection στο: softeng24-20/documentation/API_Documentation_Postman_Collection.json
-- Το cli 
+- Οι εντολές του cli είναι προσβάσιμες στο ./cli-client 
 
 ## Δομή Repository
 - `/back-end/RESTful API`: Κώδικας για το REST API.
