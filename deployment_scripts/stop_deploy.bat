@@ -17,8 +17,6 @@ exit /b
 :: Stop node processes running on specific ports
 call :kill_node_process_by_port 3000
 call :kill_node_process_by_port 9115
-call :kill_node_process_by_port 35274
-call :kill_node_process_by_port 33034
 
 echo All specified ports have been checked.
 exit /b
