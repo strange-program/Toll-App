@@ -1,0 +1,7 @@
+{
+    "status": "OK",
+    "dbconnection": "mongodb://localhost:27017/TollDatabase",
+    "n_stations": 253,
+    "n_tags": 50,
+    "n_passes": 1002
+}
