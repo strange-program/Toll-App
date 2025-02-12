@@ -5,7 +5,7 @@ import tollStations from "./MapData";
 import L from "leaflet"; // Για custom icons
 import { Link } from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import Footer from './Footer';
+
 
 
 // Δημιουργία προσαρμοσμένου εικονιδίου
@@ -149,7 +149,6 @@ const TollMap = () => {
          </div>
 
         </div>
-        <Footer/>
         </div>
       )}
 
