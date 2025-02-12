@@ -1,0 +1,4 @@
+{
+    "error": 400,
+    "message": "{\"message\":\"Invalid date format. Use YYYYMMDD (e.g., 20250208).\"}"
+}
