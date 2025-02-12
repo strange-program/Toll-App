@@ -20,6 +20,10 @@
      ```bash
      deploy.bat
      ```
+   - Linux:
+     ```bash
+     deploy.sh
+     ```
    - (Βεβαιωθείτε ότι έχετε εγκατεστημένο το Node.js).
 
 Το script:
