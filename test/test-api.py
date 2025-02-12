@@ -123,6 +123,65 @@ def test_endpoints():
         save_response(filename, response)
         compare_responses(filename)
 
+def get_toll_station_passes(toll_station_id, date_from, date_to):
+    response = session.get(f"{BASE_URL}/api/tollStationPasses/{toll_station_id}/{date_from}/{date_to}")
+    save_response("toll_station_passes_response", response)
+    if response.ok:
+        try:
+            response_data = response.json()  # Try decoding the response
+        except json.JSONDecodeError:
+            print(f"Failed to decode JSON for toll_station_passes_response: {response.text}")
+            return
+    compare_responses("toll_station_passes_response")
+
+def get_pass_analysis(station_op_id, tag_op_id, date_from, date_to):
+    response = session.get(f"{BASE_URL}/api/passAnalysis/{station_op_id}/{tag_op_id}/{date_from}/{date_to}")
+    save_response("pass_analysis_response", response)
+    if response.ok:
+        try:
+            response_data = response.json()  # Try decoding the response
+        except json.JSONDecodeError:
+            print(f"Failed to decode JSON for pass_analysis_response: {response.text}")
+            return
+    compare_responses("pass_analysis_response")
+
+def get_passes_cost(toll_op_id, tag_op_id, date_from, date_to):
+    response = session.get(f"{BASE_URL}/api/passesCost/{toll_op_id}/{tag_op_id}/{date_from}/{date_to}")
+    save_response("passes_cost_response", response)
+    if response.ok:
+        try:
+            response_data = response.json()  # Try decoding the response
+        except json.JSONDecodeError:
+            print(f"Failed to decode JSON for passes_cost_response: {response.text}")
+            return
+    compare_responses("passes_cost_response")
+
+def get_charges_by(toll_op_id, date_from, date_to):
+    response = session.get(f"{BASE_URL}/api/chargesBy/{toll_op_id}/{date_from}/{date_to}")
+    save_response("charges_by_response", response)
+    if response.ok:
+        try:
+            response_data = response.json()  # Try decoding the response
+        except json.JSONDecodeError:
+            print(f"Failed to decode JSON for charges_by_response: {response.text}")
+            return
+    compare_responses("charges_by_response")
+
+def test_endpoints():
+    endpoints = [
+        ("toll_stations", "/api/tollStations"),
+        ("toll_station_passes", "/api/tollStationPasses")
+    ]
+
+    admin_endpoints = [
+        ("healthcheck", "/api/admin/healthcheck")
+    ]
+
+    for filename, endpoint in endpoints + admin_endpoints:
+        response = session.get(f"{BASE_URL}{endpoint}") if "admin" not in filename else session.post(f"{BASE_URL}{endpoint}")
+        save_response(filename, response)
+        compare_responses(filename)
+
 if __name__ == "__main__":
     login()
     reset_stations()
@@ -130,5 +189,9 @@ if __name__ == "__main__":
     test_endpoints()
     get_diagram1("aegeanmotorway", "2022-01-01", "2022-03-01")
     get_diagram2("2022-01-01", "2022-02-01")
+    get_passes_cost("NAO","NAO","20220101","20230110")
     get_toll_map_passes("NAO30", "2022-01-01", "2022-02-01")
+    get_toll_station_passes("NAO30","2022-01-01","2023-01-10")
+    get_pass_analysis("NAO30","NAO","2022-01-01","2023-01-10")
+    get_charges_by("NAO","2022-01-01","2023-01-10")
     logout()
