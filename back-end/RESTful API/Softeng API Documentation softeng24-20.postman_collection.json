@@ -1,0 +1,2251 @@
+{
+	"info": {
+		"_postman_id": "361600b0-5972-44cf-8d4c-a03b8fc6738c",
+		"name": "Softeng API Documentation softeng24-20",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "41931674"
+	},
+	"item": [
+		{
+			"name": "Root endpoint",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:9115/api",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9115",
+					"path": [
+						"api"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Save JWT token\", function () {",
+							"    var responseBody = pm.response.json();",
+							"    var jwt = responseBody.token || responseBody.jwt || responseBody['jwt-token'] || responseBody.jwtToken;",
+							"    pm.collectionVariables.set(\"jwt\", jwt);",
+							"    pm.test(\"JWT saved successfully\", function () {",
+							"        pm.expect(jwt).to.exist;",
+							"    });",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "username",
+							"value": "admin1"
+						},
+						{
+							"key": "password",
+							"value": "securepass123"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:9115/api/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9115",
+					"path": [
+						"api",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Reset Stations",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwt}}",
+						"type": "text"
+					},
+					{
+						"key": "X-OBSERVATORY-AUTH",
+						"value": "{{jwt}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": []
+				},
+				"url": {
+					"raw": "http://localhost:9115/api/admin/resetstations",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9115",
+					"path": [
+						"api",
+						"admin",
+						"resetstations"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Reset Passes",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwt}}",
+						"type": "text"
+					},
+					{
+						"key": "X-OBSERVATORY-AUTH",
+						"value": "{{jwt}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": []
+				},
+				"url": {
+					"raw": "http://localhost:9115/api/admin/resetpasses",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9115",
+					"path": [
+						"api",
+						"admin",
+						"resetpasses"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Check Health",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwt}}",
+						"type": "text"
+					},
+					{
+						"key": "X-OBSERVATORY-AUTH",
+						"value": "{{jwt}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:9115/api/admin/healthcheck",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9115",
+					"path": [
+						"api",
+						"admin",
+						"healthcheck"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get All Passes",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwt}}",
+						"type": "text"
+					},
+					{
+						"key": "X-OBSERVATORY-AUTH",
+						"value": "{{jwt}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:9115/api/tollStationPasses",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9115",
+					"path": [
+						"api",
+						"tollStationPasses"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get All Stations",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwt}}",
+						"type": "text"
+					},
+					{
+						"key": "X-OBSERVATORY-AUTH",
+						"value": "{{jwt}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:9115/api/tollStations",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9115",
+					"path": [
+						"api",
+						"tollStations"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Passes for Toll Station",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwt}}",
+						"type": "text"
+					},
+					{
+						"key": "X-OBSERVATORY-AUTH",
+						"value": "{{jwt}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:9115/api/tollStationPasses/NAO30/20220101/20230110",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9115",
+					"path": [
+						"api",
+						"tollStationPasses",
+						"NAO30",
+						"20220101",
+						"20230110"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Analyze Passes",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwt}}",
+						"type": "text"
+					},
+					{
+						"key": "X-OBSERVATORY-AUTH",
+						"value": "{{jwt}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:9115/api/passAnalysis/NAO30/NAO/20220101/20230110",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9115",
+					"path": [
+						"api",
+						"passAnalysis",
+						"NAO30",
+						"NAO",
+						"20220101",
+						"20230110"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Passes Cost",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwt}}",
+						"type": "text"
+					},
+					{
+						"key": "X-OBSERVATORY-AUTH",
+						"value": "{{jwt}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:9115/api/passesCost/NAO/NAO/20220101/20230110",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9115",
+					"path": [
+						"api",
+						"passesCost",
+						"NAO",
+						"NAO",
+						"20220101",
+						"20230110"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Charges by Toll Operator",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwt}}",
+						"type": "text"
+					},
+					{
+						"key": "X-OBSERVATORY-AUTH",
+						"value": "{{jwt}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:9115/api/chargesBy/NAO/20220101/20230110",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9115",
+					"path": [
+						"api",
+						"chargesBy",
+						"NAO",
+						"20220101",
+						"20230110"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Register Admin User",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwt}}",
+						"type": "text"
+					},
+					{
+						"key": "X-OBSERVATORY-AUTH",
+						"value": "{{jwt}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "username",
+							"value": "ethel_the_cat"
+						},
+						{
+							"key": "password",
+							"value": "uiiaiuiiiai"
+						},
+						{
+							"key": "OpID",
+							"value": "meme"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:9115/api/admin/register",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9115",
+					"path": [
+						"api",
+						"admin",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add Passes",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwt}}",
+						"type": "text"
+					},
+					{
+						"key": "X-OBSERVATORY-AUTH",
+						"value": "{{jwt}}",
+						"type": "text"
+					}
+				],
+				"body": {
+				"mode": "form-data",
+				"form-data": [
+					{
+					"key": "file",
+					"type": "file",
+					"src": "passes20.csv"
+					}
+				]
+				},
+				"url": {
+					"raw": "http://localhost:9115/api/admin/addpasses",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9115",
+					"path": [
+						"api",
+						"admin",
+						"addpasses"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Passes",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwt}}",
+						"type": "text"
+					},
+					{
+						"key": "X-OBSERVATORY-AUTH",
+						"value": "{{jwt}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:9115/api/passes",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9115",
+					"path": [
+						"api",
+						"passes"
+					],
+					"query": [
+						{
+							"key": "stationId",
+							"value": "NAO30"
+						},
+						{
+							"key": "startDate",
+							"value": "2022-01-01"
+						},
+						{
+							"key": "endDate",
+							"value": "2022-03-01"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Diagram 1",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwt}}",
+						"type": "text"
+					},
+					{
+						"key": "X-OBSERVATORY-AUTH",
+						"value": "{{jwt}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:9115/api/getDiagram1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9115",
+					"path": [
+						"api",
+						"getDiagram1"
+					],
+					"query": [
+						{
+							"key": "operator",
+							"value": "aegeanmotorway"
+						},
+						{
+							"key": "startDate",
+							"value": "2022-01-01"
+						},
+						{
+							"key": "endDate",
+							"value": "2022-03-01"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Diagram 2",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwt}}",
+						"type": "text"
+					},
+					{
+						"key": "X-OBSERVATORY-AUTH",
+						"value": "{{jwt}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:9115/api/getDiagram2",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9115",
+					"path": [
+						"api",
+						"getDiagram2"
+					],
+					"query": [
+						{
+							"key": "startDate",
+							"value": "2022-01-01"
+						},
+						{
+							"key": "endDate",
+							"value": "2022-03-01"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Logout",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwt}}",
+						"type": "text"
+					},
+					{
+						"key": "X-OBSERVATORY-AUTH",
+						"value": "{{jwt}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:9115/api/logout",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9115",
+					"path": [
+						"api",
+						"logout"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Save JWT token\", function () {",
+							"    var responseBody = pm.response.json();",
+							"    var jwt = responseBody.token || responseBody.jwt || responseBody['jwt-token'] || responseBody.jwtToken;",
+							"    pm.collectionVariables.set(\"jwt\", jwt);",
+							"    pm.test(\"JWT saved successfully\", function () {",
+							"        pm.expect(jwt).to.exist;",
+							"    });",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "username",
+							"value": "egnatia"
+						},
+						{
+							"key": "password",
+							"value": "2222"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:9115/api/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9115",
+					"path": [
+						"api",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Reset Stations",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwt}}",
+						"type": "text"
+					},
+					{
+						"key": "X-OBSERVATORY-AUTH",
+						"value": "{{jwt}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": []
+				},
+				"url": {
+					"raw": "http://localhost:9115/api/admin/resetstations",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9115",
+					"path": [
+						"api",
+						"admin",
+						"resetstations"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Reset Passes",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwt}}",
+						"type": "text"
+					},
+					{
+						"key": "X-OBSERVATORY-AUTH",
+						"value": "{{jwt}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": []
+				},
+				"url": {
+					"raw": "http://localhost:9115/api/admin/resetpasses",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9115",
+					"path": [
+						"api",
+						"admin",
+						"resetpasses"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Check Health",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwt}}",
+						"type": "text"
+					},
+					{
+						"key": "X-OBSERVATORY-AUTH",
+						"value": "{{jwt}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:9115/api/admin/healthcheck",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9115",
+					"path": [
+						"api",
+						"admin",
+						"healthcheck"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get All Passes",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwt}}",
+						"type": "text"
+					},
+					{
+						"key": "X-OBSERVATORY-AUTH",
+						"value": "{{jwt}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:9115/api/tollStationPasses",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9115",
+					"path": [
+						"api",
+						"tollStationPasses"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get All Stations",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwt}}",
+						"type": "text"
+					},
+					{
+						"key": "X-OBSERVATORY-AUTH",
+						"value": "{{jwt}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:9115/api/tollStations",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9115",
+					"path": [
+						"api",
+						"tollStations"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Passes for Toll Station",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwt}}",
+						"type": "text"
+					},
+					{
+						"key": "X-OBSERVATORY-AUTH",
+						"value": "{{jwt}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:9115/api/tollStationPasses/NAO30/20220101/20230110",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9115",
+					"path": [
+						"api",
+						"tollStationPasses",
+						"NAO30",
+						"20220101",
+						"20230110"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Analyze Passes",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwt}}",
+						"type": "text"
+					},
+					{
+						"key": "X-OBSERVATORY-AUTH",
+						"value": "{{jwt}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:9115/api/passAnalysis/NAO30/NAO/20220101/20230110",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9115",
+					"path": [
+						"api",
+						"passAnalysis",
+						"NAO30",
+						"NAO",
+						"20220101",
+						"20230110"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Passes Cost",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwt}}",
+						"type": "text"
+					},
+					{
+						"key": "X-OBSERVATORY-AUTH",
+						"value": "{{jwt}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:9115/api/passesCost/NAO/NAO/20220101/20230110",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9115",
+					"path": [
+						"api",
+						"passesCost",
+						"NAO",
+						"NAO",
+						"20220101",
+						"20230110"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Charges by Toll Operator",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwt}}",
+						"type": "text"
+					},
+					{
+						"key": "X-OBSERVATORY-AUTH",
+						"value": "{{jwt}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:9115/api/chargesBy/NAO/20220101/20230110",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9115",
+					"path": [
+						"api",
+						"chargesBy",
+						"NAO",
+						"20220101",
+						"20230110"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Register Admin User",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwt}}",
+						"type": "text"
+					},
+					{
+						"key": "X-OBSERVATORY-AUTH",
+						"value": "{{jwt}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "username",
+							"value": "ethel_the_cat"
+						},
+						{
+							"key": "password",
+							"value": "uiiaiuiiiai"
+						},
+						{
+							"key": "OpID",
+							"value": "meme"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:9115/api/admin/register",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9115",
+					"path": [
+						"api",
+						"admin",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add Passes",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwt}}",
+						"type": "text"
+					},
+					{
+						"key": "X-OBSERVATORY-AUTH",
+						"value": "{{jwt}}",
+						"type": "text"
+					}
+				],
+				"body": {
+				"mode": "form-data",
+				"form-data": [
+					{
+					"key": "file",
+					"type": "file",
+					"src": "passes20.csv"
+					}
+				]
+				},
+				"url": {
+					"raw": "http://localhost:9115/api/admin/addpasses",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9115",
+					"path": [
+						"api",
+						"admin",
+						"addpasses"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Passes",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwt}}",
+						"type": "text"
+					},
+					{
+						"key": "X-OBSERVATORY-AUTH",
+						"value": "{{jwt}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:9115/api/passes",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9115",
+					"path": [
+						"api",
+						"passes"
+					],
+					"query": [
+						{
+							"key": "stationId",
+							"value": "NAO30"
+						},
+						{
+							"key": "startDate",
+							"value": "2022-01-01"
+						},
+						{
+							"key": "endDate",
+							"value": "2022-03-01"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Diagram 1",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwt}}",
+						"type": "text"
+					},
+					{
+						"key": "X-OBSERVATORY-AUTH",
+						"value": "{{jwt}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:9115/api/getDiagram1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9115",
+					"path": [
+						"api",
+						"getDiagram1"
+					],
+					"query": [
+						{
+							"key": "operator",
+							"value": "aegeanmotorway"
+						},
+						{
+							"key": "startDate",
+							"value": "2022-01-01"
+						},
+						{
+							"key": "endDate",
+							"value": "2022-03-01"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Diagram 2",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwt}}",
+						"type": "text"
+					},
+					{
+						"key": "X-OBSERVATORY-AUTH",
+						"value": "{{jwt}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:9115/api/getDiagram2",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9115",
+					"path": [
+						"api",
+						"getDiagram2"
+					],
+					"query": [
+						{
+							"key": "startDate",
+							"value": "2022-01-01"
+						},
+						{
+							"key": "endDate",
+							"value": "2022-03-01"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Logout",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwt}}",
+						"type": "text"
+					},
+					{
+						"key": "X-OBSERVATORY-AUTH",
+						"value": "{{jwt}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:9115/api/logout",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9115",
+					"path": [
+						"api",
+						"logout"
+					]
+				}
+			},
+			"response": []
+		},
+			{
+			"name": "Login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Save JWT token\", function () {",
+							"    var responseBody = pm.response.json();",
+							"    var jwt = responseBody.token || responseBody.jwt || responseBody['jwt-token'] || responseBody.jwtToken;",
+							"    pm.collectionVariables.set(\"jwt\", jwt);",
+							"    pm.test(\"JWT saved successfully\", function () {",
+							"        pm.expect(jwt).to.exist;",
+							"    });",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "username",
+							"value": "thisuserdoesn'texist"
+						},
+						{
+							"key": "password",
+							"value": "nothing"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:9115/api/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9115",
+					"path": [
+						"api",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Reset Stations",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwt}}",
+						"type": "text"
+					},
+					{
+						"key": "X-OBSERVATORY-AUTH",
+						"value": "{{jwt}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": []
+				},
+				"url": {
+					"raw": "http://localhost:9115/api/admin/resetstations",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9115",
+					"path": [
+						"api",
+						"admin",
+						"resetstations"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Reset Passes",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwt}}",
+						"type": "text"
+					},
+					{
+						"key": "X-OBSERVATORY-AUTH",
+						"value": "{{jwt}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": []
+				},
+				"url": {
+					"raw": "http://localhost:9115/api/admin/resetpasses",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9115",
+					"path": [
+						"api",
+						"admin",
+						"resetpasses"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Check Health",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwt}}",
+						"type": "text"
+					},
+					{
+						"key": "X-OBSERVATORY-AUTH",
+						"value": "{{jwt}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:9115/api/admin/healthcheck",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9115",
+					"path": [
+						"api",
+						"admin",
+						"healthcheck"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get All Passes",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwt}}",
+						"type": "text"
+					},
+					{
+						"key": "X-OBSERVATORY-AUTH",
+						"value": "{{jwt}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:9115/api/tollStationPasses",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9115",
+					"path": [
+						"api",
+						"tollStationPasses"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get All Stations",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwt}}",
+						"type": "text"
+					},
+					{
+						"key": "X-OBSERVATORY-AUTH",
+						"value": "{{jwt}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:9115/api/tollStations",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9115",
+					"path": [
+						"api",
+						"tollStations"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Passes for Toll Station",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwt}}",
+						"type": "text"
+					},
+					{
+						"key": "X-OBSERVATORY-AUTH",
+						"value": "{{jwt}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:9115/api/tollStationPasses/NAO30/20220101/20230110",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9115",
+					"path": [
+						"api",
+						"tollStationPasses",
+						"NAO30",
+						"20220101",
+						"20230110"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Analyze Passes",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwt}}",
+						"type": "text"
+					},
+					{
+						"key": "X-OBSERVATORY-AUTH",
+						"value": "{{jwt}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:9115/api/passAnalysis/NAO30/NAO/20220101/20230110",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9115",
+					"path": [
+						"api",
+						"passAnalysis",
+						"NAO30",
+						"NAO",
+						"20220101",
+						"20230110"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Passes Cost",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwt}}",
+						"type": "text"
+					},
+					{
+						"key": "X-OBSERVATORY-AUTH",
+						"value": "{{jwt}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:9115/api/passesCost/NAO/NAO/20220101/20230110",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9115",
+					"path": [
+						"api",
+						"passesCost",
+						"NAO",
+						"NAO",
+						"20220101",
+						"20230110"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Charges by Toll Operator",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwt}}",
+						"type": "text"
+					},
+					{
+						"key": "X-OBSERVATORY-AUTH",
+						"value": "{{jwt}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:9115/api/chargesBy/NAO/20220101/20230110",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9115",
+					"path": [
+						"api",
+						"chargesBy",
+						"NAO",
+						"20220101",
+						"20230110"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Register Admin User",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwt}}",
+						"type": "text"
+					},
+					{
+						"key": "X-OBSERVATORY-AUTH",
+						"value": "{{jwt}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "username",
+							"value": "ethel_the_cat"
+						},
+						{
+							"key": "password",
+							"value": "uiiaiuiiiai"
+						},
+						{
+							"key": "OpID",
+							"value": "meme"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:9115/api/admin/register",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9115",
+					"path": [
+						"api",
+						"admin",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add Passes",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwt}}",
+						"type": "text"
+					},
+					{
+						"key": "X-OBSERVATORY-AUTH",
+						"value": "{{jwt}}",
+						"type": "text"
+					}
+				],
+				"body": {
+				"mode": "form-data",
+				"form-data": [
+					{
+					"key": "file",
+					"type": "file",
+					"src": "passes20.csv"
+					}
+				]
+				},
+				"url": {
+					"raw": "http://localhost:9115/api/admin/addpasses",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9115",
+					"path": [
+						"api",
+						"admin",
+						"addpasses"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Passes",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwt}}",
+						"type": "text"
+					},
+					{
+						"key": "X-OBSERVATORY-AUTH",
+						"value": "{{jwt}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:9115/api/passes",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9115",
+					"path": [
+						"api",
+						"passes"
+					],
+					"query": [
+						{
+							"key": "stationId",
+							"value": "NAO30"
+						},
+						{
+							"key": "startDate",
+							"value": "2022-01-01"
+						},
+						{
+							"key": "endDate",
+							"value": "2022-03-01"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Diagram 1",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwt}}",
+						"type": "text"
+					},
+					{
+						"key": "X-OBSERVATORY-AUTH",
+						"value": "{{jwt}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:9115/api/getDiagram1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9115",
+					"path": [
+						"api",
+						"getDiagram1"
+					],
+					"query": [
+						{
+							"key": "operator",
+							"value": "aegeanmotorway"
+						},
+						{
+							"key": "startDate",
+							"value": "2022-01-01"
+						},
+						{
+							"key": "endDate",
+							"value": "2022-03-01"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Diagram 2",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwt}}",
+						"type": "text"
+					},
+					{
+						"key": "X-OBSERVATORY-AUTH",
+						"value": "{{jwt}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:9115/api/getDiagram2",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9115",
+					"path": [
+						"api",
+						"getDiagram2"
+					],
+					"query": [
+						{
+							"key": "startDate",
+							"value": "2022-01-01"
+						},
+						{
+							"key": "endDate",
+							"value": "2022-03-01"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Logout",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwt}}",
+						"type": "text"
+					},
+					{
+						"key": "X-OBSERVATORY-AUTH",
+						"value": "{{jwt}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:9115/api/logout",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9115",
+					"path": [
+						"api",
+						"logout"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Save JWT token\", function () {",
+							"    var responseBody = pm.response.json();",
+							"    var jwt = responseBody.token || responseBody.jwt || responseBody['jwt-token'] || responseBody.jwtToken;",
+							"    pm.collectionVariables.set(\"jwt\", jwt);",
+							"    pm.test(\"JWT saved successfully\", function () {",
+							"        pm.expect(jwt).to.exist;",
+							"    });",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "username",
+							"value": "admin1"
+						},
+						{
+							"key": "password",
+							"value": "securepass123"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:9115/api/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9115",
+					"path": [
+						"api",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Passes for Toll Station",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwt}}",
+						"type": "text"
+					},
+					{
+						"key": "X-OBSERVATORY-AUTH",
+						"value": "{{jwt}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:9115/api/tollStationPasses/XXX/???/???",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9115",
+					"path": [
+						"api",
+						"tollStationPasses",
+						"XXX",
+						"???",
+						"???"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Analyze Passes",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwt}}",
+						"type": "text"
+					},
+					{
+						"key": "X-OBSERVATORY-AUTH",
+						"value": "{{jwt}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:9115/api/passAnalysis/XXX/XXX/???/???",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9115",
+					"path": [
+						"api",
+						"passAnalysis",
+						"XXX",
+						"XXX",
+						"???",
+						"???"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Passes Cost",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwt}}",
+						"type": "text"
+					},
+					{
+						"key": "X-OBSERVATORY-AUTH",
+						"value": "{{jwt}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:9115/api/passesCost/XXX/XXX/???/???",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9115",
+					"path": [
+						"api",
+						"passesCost",
+						"XXX",
+						"XXX",
+						"???",
+						"???"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Charges by Toll Operator",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwt}}",
+						"type": "text"
+					},
+					{
+						"key": "X-OBSERVATORY-AUTH",
+						"value": "{{jwt}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:9115/api/chargesBy/XXX/???/???",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9115",
+					"path": [
+						"api",
+						"chargesBy",
+						"XXX",
+						"???",
+						"???"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Register Admin User",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwt}}",
+						"type": "text"
+					},
+					{
+						"key": "X-OBSERVATORY-AUTH",
+						"value": "{{jwt}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:9115/api/admin/register",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9115",
+					"path": [
+						"api",
+						"admin",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add Passes",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwt}}",
+						"type": "text"
+					},
+					{
+						"key": "X-OBSERVATORY-AUTH",
+						"value": "{{jwt}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:9115/api/admin/addpasses",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9115",
+					"path": [
+						"api",
+						"admin",
+						"addpasses"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Passes",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwt}}",
+						"type": "text"
+					},
+					{
+						"key": "X-OBSERVATORY-AUTH",
+						"value": "{{jwt}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:9115/api/passes",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9115",
+					"path": [
+						"api",
+						"passes"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Diagram 1",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwt}}",
+						"type": "text"
+					},
+					{
+						"key": "X-OBSERVATORY-AUTH",
+						"value": "{{jwt}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:9115/api/getDiagram1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9115",
+					"path": [
+						"api",
+						"getDiagram1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Diagram 2",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwt}}",
+						"type": "text"
+					},
+					{
+						"key": "X-OBSERVATORY-AUTH",
+						"value": "{{jwt}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:9115/api/getDiagram2",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9115",
+					"path": [
+						"api",
+						"getDiagram2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Logout",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwt}}",
+						"type": "text"
+					},
+					{
+						"key": "X-OBSERVATORY-AUTH",
+						"value": "{{jwt}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:9115/api/logout",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9115",
+					"path": [
+						"api",
+						"logout"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "undefined",
+				"type": "any"
+			}
+		]
+	},
+	"variable": [
+		{
+			"key": "jwt",
+			"value": ""
+		}
+	]
+}
