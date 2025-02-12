@@ -3,7 +3,7 @@ import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Link } from "react-router-dom";
-import Footer from './Footer';
+
 
 const Statistics = () => {
   const [startDate, setStartDate] = useState("");
@@ -233,8 +233,7 @@ const Statistics = () => {
       <div className="position-absolute bottom-0 end-0">
        <button type="button" class="btn btn-success btn-lg"><Link className="nav-link" to="/statistics2">Συνέχεια</Link></button>
       </div>
-      <Footer/>
-
+  
        </div>
        
 
