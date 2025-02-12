@@ -28,7 +28,7 @@ const resetstations = async (req, res) => {
         });
 
         tolls = csvData.map(row => {
-            console.log('Parsed Row:', row);
+            //console.log('Parsed Row:', row);
 
             if (!row.TollID || !row.Name || !row.Locality ||
                 isNaN(parseFloat(row.Lat)) || isNaN(parseFloat(row.Long)) ||
