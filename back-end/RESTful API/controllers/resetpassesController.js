@@ -28,7 +28,7 @@ const resetpasses = async (req, res) => {
         });
 
         passes = csvData.map(row => {
-            console.log('Parsed Row:', row);
+            //console.log('Parsed Row:', row);
 
             if (!row.timestamp || !row.tollID || !row.tagRef || !row.tagHomeID || isNaN(parseFloat(row.charge))) {
                 console.warn('Skipping invalid row:', row);
