@@ -1,0 +1,3 @@
+{
+    "output": "Healthcheck: Connection is OK\n{\n  status: 'OK',\n  dbconnection: 'mongodb://localhost:27017/TollDatabase',\n  n_stations: 253,\n  n_tags: 50,\n  n_passes: 1002\n}"
+}
