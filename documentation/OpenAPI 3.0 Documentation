@@ -1,0 +1,610 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+      "title": "Toll Station API",
+      "version": "1.0.0",
+      "description": "API for managing toll station passes and charges"
+    },
+    "servers": [
+      {
+        "url": "http://localhost",
+        "description": "Local development server"
+      }
+    ],
+    "components": {
+      "responses": {
+        "StandardError": {
+          "description": "Standard error response",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "message": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "securitySchemes": {
+        "bearerAuth": {
+          "type": "http",
+          "scheme": "bearer"
+        }
+      }
+    },
+    "paths": {
+      "/": {
+        "get": {
+          "summary": "Root endpoint",
+          "tags": ["general"],
+          "responses": {
+            "200": {
+              "description": "Successfully returned home page or API info"
+            },
+            "500": {
+              "description": "Σε περίπτωση οποιουδήποτε άλλου σφάλματος",
+              "$ref": "#/components/responses/StandardError"
+            }
+          }
+        }
+      },
+      "/getDiagram1": {
+        "get": {
+          "summary": "Get first diagram data",
+          "tags": ["diagrams"],
+          "responses": {
+            "200": {
+              "description": "Successfully retrieved diagram 1 data"
+            },
+            "204": {
+              "description": "Σε περίπτωση που η κλήση είναι επιτυχής, αλλά απάντηση είναι κενή"
+            },
+            "401": {
+              "description": "Σε περίπτωση που η αίτηση γίνεται από μη διαπιστευμένο χρήστη",
+              "$ref": "#/components/responses/StandardError"
+            },
+            "500": {
+              "description": "Σε περίπτωση οποιουδήποτε άλλου σφάλματος",
+              "$ref": "#/components/responses/StandardError"
+            }
+          }
+        }
+      },
+      "/getDiagram2": {
+        "get": {
+          "summary": "Get second diagram data",
+          "tags": ["diagrams"],
+          "responses": {
+            "200": {
+              "description": "Successfully retrieved diagram 2 data"
+            },
+            "204": {
+              "description": "Σε περίπτωση που η κλήση είναι επιτυχής, αλλά απάντηση είναι κενή"
+            },
+            "401": {
+              "description": "Σε περίπτωση που η αίτηση γίνεται από μη διαπιστευμένο χρήστη",
+              "$ref": "#/components/responses/StandardError"
+            },
+            "500": {
+              "description": "Σε περίπτωση οποιουδήποτε άλλου σφάλματος",
+              "$ref": "#/components/responses/StandardError"
+            }
+          }
+        }
+      },
+      "/getAmountsDue": {
+        "get": {
+          "summary": "Get amounts due for payment",
+          "tags": ["payments"],
+          "responses": {
+            "200": {
+              "description": "Successfully retrieved amounts due"
+            },
+            "204": {
+              "description": "Σε περίπτωση που η κλήση είναι επιτυχής, αλλά απάντηση είναι κενή"
+            },
+            "401": {
+              "description": "Σε περίπτωση που η αίτηση γίνεται από μη διαπιστευμένο χρήστη",
+              "$ref": "#/components/responses/StandardError"
+            },
+            "500": {
+              "description": "Σε περίπτωση οποιουδήποτε άλλου σφάλματος",
+              "$ref": "#/components/responses/StandardError"
+            }
+          }
+        }
+      },
+      "/postPayment": {
+        "post": {
+          "summary": "Submit a payment",
+          "tags": ["payments"],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "amount": {
+                      "type": "number"
+                    },
+                    "paymentMethod": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Payment processed successfully"
+            },
+            "401": {
+              "description": "Σε περίπτωση που η αίτηση γίνεται από μη διαπιστευμένο χρήστη",
+              "$ref": "#/components/responses/StandardError"
+            },
+            "500": {
+              "description": "Σε περίπτωση οποιουδήποτε άλλου σφάλματος",
+              "$ref": "#/components/responses/StandardError"
+            }
+          }
+        }
+      },
+      "/passes": {
+        "get": {
+          "summary": "Get all passes",
+          "tags": ["passes"],
+          "responses": {
+            "200": {
+              "description": "Successfully retrieved passes"
+            },
+            "401": {
+              "description": "Σε περίπτωση που η αίτηση γίνεται από μη διαπιστευμένο χρήστη",
+              "$ref": "#/components/responses/StandardError"
+            },
+            "500": {
+              "description": "Σε περίπτωση οποιουδήποτε άλλου σφάλματος",
+              "$ref": "#/components/responses/StandardError"
+            }
+          }
+        }
+      },
+      "/admin/register": {
+        "post": {
+          "summary": "Register a new admin user",
+          "tags": ["admin"],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "username": {
+                      "type": "string"
+                    },
+                    "password": {
+                      "type": "string",
+                      "format": "password"
+                    }
+                  },
+                  "required": ["username", "password"]
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Admin user created successfully"
+            },
+            "401": {
+              "description": "Σε περίπτωση που η αίτηση γίνεται από μη διαπιστευμένο χρήστη",
+              "$ref": "#/components/responses/StandardError"
+            },
+            "500": {
+              "description": "Σε περίπτωση οποιουδήποτε άλλου σφάλματος",
+              "$ref": "#/components/responses/StandardError"
+            }
+          }
+        }
+      },
+      "/login": {
+        "post": {
+          "summary": "User login",
+          "tags": ["auth"],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "username": {
+                      "type": "string"
+                    },
+                    "password": {
+                      "type": "string",
+                      "format": "password"
+                    }
+                  },
+                  "required": ["username", "password"]
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Login successful",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "token": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Σε περίπτωση που η αίτηση γίνεται από μη διαπιστευμένο χρήστη",
+              "$ref": "#/components/responses/StandardError"
+            },
+            "500": {
+              "description": "Σε περίπτωση οποιουδήποτε άλλου σφάλματος",
+              "$ref": "#/components/responses/StandardError"
+            }
+          }
+        }
+      },
+      "/logout": {
+        "post": {
+          "summary": "User logout",
+          "tags": ["auth"],
+          "responses": {
+            "200": {
+              "description": "Logout successful"
+            },
+            "401": {
+              "description": "Σε περίπτωση που η αίτηση γίνεται από μη διαπιστευμένο χρήστη",
+              "$ref": "#/components/responses/StandardError"
+            },
+            "500": {
+              "description": "Σε περίπτωση οποιουδήποτε άλλου σφάλματος",
+              "$ref": "#/components/responses/StandardError"
+            }
+          }
+        }
+      },
+      "/admin/resetpasses": {
+        "post": {
+          "summary": "Reset all passes",
+          "tags": ["admin"],
+          "responses": {
+            "200": {
+              "description": "Passes reset successfully"
+            },
+            "401": {
+              "description": "Σε περίπτωση που η αίτηση γίνεται από μη διαπιστευμένο χρήστη",
+              "$ref": "#/components/responses/StandardError"
+            },
+            "500": {
+              "description": "Σε περίπτωση οποιουδήποτε άλλου σφάλματος",
+              "$ref": "#/components/responses/StandardError"
+            }
+          }
+        }
+      },
+      "/admin/resetstations": {
+        "post": {
+          "summary": "Reset all stations",
+          "tags": ["admin"],
+          "responses": {
+            "200": {
+              "description": "Stations reset successfully"
+            },
+            "401": {
+              "description": "Σε περίπτωση που η αίτηση γίνεται από μη διαπιστευμένο χρήστη",
+              "$ref": "#/components/responses/StandardError"
+            },
+            "500": {
+              "description": "Σε περίπτωση οποιουδήποτε άλλου σφάλματος",
+              "$ref": "#/components/responses/StandardError"
+            }
+          }
+        }
+      },
+      "/admin/healthcheck": {
+        "get": {
+          "summary": "Check system health",
+          "tags": ["admin"],
+          "responses": {
+            "200": {
+              "description": "System is healthy"
+            },
+            "500": {
+              "description": "Σε περίπτωση οποιουδήποτε άλλου σφάλματος",
+              "$ref": "#/components/responses/StandardError"
+            }
+          }
+        }
+      },
+      "/admin/addpasses": {
+        "post": {
+          "summary": "Add new passes",
+          "tags": ["admin"],
+          "responses": {
+            "200": {
+              "description": "Passes added successfully"
+            },
+            "401": {
+              "description": "Σε περίπτωση που η αίτηση γίνεται από μη διαπιστευμένο χρήστη",
+              "$ref": "#/components/responses/StandardError"
+            },
+            "500": {
+              "description": "Σε περίπτωση οποιουδήποτε άλλου σφάλματος",
+              "$ref": "#/components/responses/StandardError"
+            }
+          }
+        }
+      },
+    "/tollStationPasses/{tollStationID}/{date_from}/{date_to}": {
+      "get": {
+        "summary": "Get passes for a specific toll station",
+        "tags": ["passes"],
+        "parameters": [
+          {
+            "name": "tollStationID",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "date_from",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date"
+            }
+          },
+          {
+            "name": "date_to",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved passes"
+          },
+          "400": {
+            "description": "Σε περίπτωση που οι παράμετροι που δίνονται σε μία κλήση δεν είναι έγκυρες",
+            "$ref": "#/components/responses/StandardError"
+          },
+          "401": {
+            "description": "Σε περίπτωση που η αίτηση γίνεται από μη διαπιστευμένο χρήστη",
+            "$ref": "#/components/responses/StandardError"
+          },
+          "500": {
+            "description": "Σε περίπτωση οποιουδήποτε άλλου σφάλματος",
+            "$ref": "#/components/responses/StandardError"
+          }
+        }
+      }
+    },
+    "/passAnalysis/{stationOpID}/{tagOpID}/{date_from}/{date_to}": {
+      "get": {
+        "summary": "Analyze passes for a specific station and tag operator",
+        "tags": ["analysis"],
+        "parameters": [
+          {
+            "name": "stationOpID",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "tagOpID",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "date_from",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date"
+            }
+          },
+          {
+            "name": "date_to",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Analysis data retrieved successfully"
+          },
+          "400": {
+            "description": "Σε περίπτωση που οι παράμετροι που δίνονται σε μία κλήση δεν είναι έγκυρες",
+            "$ref": "#/components/responses/StandardError"
+          },
+          "401": {
+            "description": "Σε περίπτωση που η αίτηση γίνεται από μη διαπιστευμένο χρήστη",
+            "$ref": "#/components/responses/StandardError"
+          },
+          "500": {
+            "description": "Σε περίπτωση οποιουδήποτε άλλου σφάλματος",
+            "$ref": "#/components/responses/StandardError"
+          }
+        }
+      }
+    },
+    "/passesCost/{tollOpID}/{tagOpID}/{date_from}/{date_to}": {
+      "get": {
+        "summary": "Get passes cost for specific operators",
+        "tags": ["cost"],
+        "parameters": [
+          {
+            "name": "tollOpID",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "tagOpID",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "date_from",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date"
+            }
+          },
+          {
+            "name": "date_to",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date"
+            }
+          },
+          {
+            "name": "format",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": ["csv"]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Cost data retrieved successfully"
+          },
+          "400": {
+            "description": "Σε περίπτωση που οι παράμετροι που δίνονται σε μία κλήση δεν είναι έγκυρες",
+            "$ref": "#/components/responses/StandardError"
+          },
+          "401": {
+            "description": "Σε περίπτωση που η αίτηση γίνεται από μη διαπιστευμένο χρήστη",
+            "$ref": "#/components/responses/StandardError"
+          },
+          "500": {
+            "description": "Σε περίπτωση οποιουδήποτε άλλου σφάλματος",
+            "$ref": "#/components/responses/StandardError"
+          }
+        }
+      }
+    },
+    "/chargesBy/{tollOpID}/{date_from}/{date_to}": {
+      "get": {
+        "summary": "Get charges by toll operator",
+        "tags": ["charges"],
+        "parameters": [
+          {
+            "name": "tollOpID",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "date_from",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date"
+            }
+          },
+          {
+            "name": "date_to",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date"
+            }
+          },
+          {
+            "name": "format",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": ["csv"]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Charges data retrieved successfully"
+          },
+          "400": {
+            "description": "Σε περίπτωση που οι παράμετροι που δίνονται σε μία κλήση δεν είναι έγκυρες",
+            "$ref": "#/components/responses/StandardError"
+          },
+          "401": {
+            "description": "Σε περίπτωση που η αίτηση γίνεται από μη διαπιστευμένο χρήστη",
+            "$ref": "#/components/responses/StandardError"
+          },
+          "500": {
+            "description": "Σε περίπτωση οποιουδήποτε άλλου σφάλματος",
+            "$ref": "#/components/responses/StandardError"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    }
+  },
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ]
+}
