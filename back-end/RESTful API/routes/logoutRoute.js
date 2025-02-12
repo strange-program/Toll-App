@@ -26,7 +26,7 @@ router.post("/api/logout",authenticateToken ,(req, res) => {
         try {
             const decoded = jwt.verify(token, "your_secret_key");
             tokenBlacklist.add(token); // Προαιρετικά, μπλοκάρουμε το token
-            return res.status(200).json({ message: "Logged out successfully" });
+            return res.status(200).json({});
         } catch (err) {console.log(err.message);
             return res.status(401).json({ message: "Invalid token" });
         }
