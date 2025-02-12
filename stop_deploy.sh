@@ -16,5 +16,3 @@ kill_node_process_by_port() {
 # Stop node processes running on specific ports
 kill_node_process_by_port 3000  # Example port 3000 (Frontend/Backend)
 kill_node_process_by_port 9115  # Example port 9115
-kill_node_process_by_port 35274 # Example for hbci-related ports
-kill_node_process_by_port 33034 # Example for another instance of hbci
